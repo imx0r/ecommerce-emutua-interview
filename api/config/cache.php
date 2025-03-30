@@ -105,4 +105,16 @@ return [
 
     'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
 
+    'keys' => [
+        'product' => [
+            'products' => [
+                'key' => 'products',
+                'ttl' => now()->addMinutes(60),
+            ],
+            'product' => [
+                'key' => 'product_:id',
+                'ttl' => now()->addMinutes(30),
+            ]
+        ]
+    ]
 ];
