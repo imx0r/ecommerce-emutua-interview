@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use Illuminate\Support\Str;
 use OpenSearch\ClientBuilder;
 
 class OpenSearchService
@@ -10,8 +11,10 @@ class OpenSearchService
 
     public function __construct()
     {
+        $hosts = Str::of(config('services.opensearch.hosts'));
         $this->client = ClientBuilder::create()
-            ->setHosts([env('OPENSEARCH_HOSTS', 'http://opensearch:9200')])
+            ->setHosts($hosts->contains(',') ? $hosts->split(',') : [$hosts->value()])
+            ->setSSLVerification(config('services.opensearch.verify_ssl', false))
             ->build();
     }
 
@@ -23,5 +26,31 @@ class OpenSearchService
             'body' => $product
         ];
         return $this->client->index($params);
+    }
+
+    public function removeProduct($id): array|string|null
+    {
+        $params = [
+            'index' => 'products',
+            'id' => $id,
+        ];
+        return $this->client->delete($params);
+    }
+
+    public function searchProducts(string $search): array|string|null
+    {
+        $params = [
+            'index' => 'products',
+            'body' => [
+                'query' => [
+                    'multi_match' => [
+                        'query' => $search,
+                        'fields' => ['name', 'description'],
+                    ]
+                ]
+            ]
+        ];
+
+        return $this->client->search($params);
     }
 }
