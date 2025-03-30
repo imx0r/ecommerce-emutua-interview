@@ -4,14 +4,17 @@ return [
     'create' => [
         'success' => 'Produto foi cadastrado com sucesso.',
         'failed' => 'Falha ao cadastrar produto.',
+        'forbidden' => 'Você não tem permissão para cadastrar um produto.',
     ],
     'delete' => [
         'success' => 'Produto foi removido com sucesso.',
         'failed' => 'Falha ao remover produto.',
+        'forbidden' => 'Você não tem permissão para remover um produto.',
     ],
     'update' => [
         'success' => 'Produto atualizado com sucesso.',
         'failed' => 'Falha ao atualizar produto.',
+        'forbidden' => 'Você não tem permissão para atualizar um produto.',
     ],
     'category' => [
         'generic' => 'Genéricos',

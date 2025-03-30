@@ -4,14 +4,17 @@ return [
     'create' => [
         'success' => 'Product has been created.',
         'failed' => 'Occurred an error while trying to create product.',
+        'forbidden' => 'You do not have permission to create product.',
     ],
     'delete' => [
         'success' => 'Product has been deleted.',
         'failed' => 'Occurred an error while trying to delete product.',
+        'forbidden' => 'You do not have permission to delete product.',
     ],
     'update' => [
         'success' => 'Product has been updated.',
         'failed' => 'Occurred an error while trying to update product.',
+        'forbidden' => 'You do not have permission to update product.',
     ],
     'category' => [
         'generic' => 'Generic',

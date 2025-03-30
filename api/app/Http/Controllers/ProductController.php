@@ -35,6 +35,10 @@ class ProductController extends Controller
 
     public function store(CreateOrUpdateProductRequest $request): \Illuminate\Http\JsonResponse
     {
+        if (!$request->user()->isAdministrator()) {
+            return response()->json(["status" => EResponseStatus::ERROR, "message" => __("product.create.forbidden")], HttpResponse::HTTP_FORBIDDEN);
+        }
+
         try {
             $product = $this->products->createProduct($request->validated());
             return response()->json($product->toArray(), HttpResponse::HTTP_CREATED);
@@ -45,6 +49,10 @@ class ProductController extends Controller
 
     public function update(CreateOrUpdateProductRequest $request, int $id): \Illuminate\Http\JsonResponse
     {
+        if (!$request->user()->isAdministrator()) {
+            return response()->json(["status" => EResponseStatus::ERROR, "message" => __("product.update.forbidden")], HttpResponse::HTTP_FORBIDDEN);
+        }
+
         try {
             $product = $this->products->byId($id);
             $product = $this->products->updateProduct($product, $request->validated());
@@ -56,6 +64,10 @@ class ProductController extends Controller
 
     public function destroy(DeleteProductRequest $request, int $id): \Illuminate\Http\JsonResponse
     {
+        if (!$request->user()->isAdministrator()) {
+            return response()->json(["status" => EResponseStatus::ERROR, "message" => __("product.delete.forbidden")], HttpResponse::HTTP_FORBIDDEN);
+        }
+
         try {
             $product = $this->products->byId($id);
             $this->products->deleteProduct($product);
