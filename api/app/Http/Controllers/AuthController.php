@@ -18,7 +18,7 @@ class AuthController extends Controller
             return response()->json([
                 "status" => "failed",
                 "status_code" => HttpResponse::HTTP_BAD_REQUEST,
-                "message" => __('auth.register_failed')
+                "message" => __('auth.create.failed')
             ], HttpResponse::HTTP_BAD_REQUEST);
         }
 
@@ -34,7 +34,7 @@ class AuthController extends Controller
         $user = User::where("username", $request->input("username"))->first();
         if (!$user || !Hash::check($request->input("password"), $user->password)) {
             throw ValidationException::withMessages([
-                "username" => [__('auth.login_failed')],
+                "username" => [__('auth.login.failed')],
             ]);
         }
 
@@ -42,7 +42,7 @@ class AuthController extends Controller
         return response()->json([
             "status" => "success",
             "status_code" => HttpResponse::HTTP_OK,
-            "message" => __('auth.login_success'),
+            "message" => __('auth.login.success'),
             "token" => $token
         ], HttpResponse::HTTP_OK);
     }
@@ -53,7 +53,7 @@ class AuthController extends Controller
         return response()->json([
             "status" => "success",
             "status_code" => HttpResponse::HTTP_OK,
-            "message" => __('auth.logout')
+            "message" => __('auth.logged_out')
         ], HttpResponse::HTTP_OK);
     }
 
