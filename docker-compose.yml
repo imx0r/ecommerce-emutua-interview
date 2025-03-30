@@ -64,6 +64,7 @@ services:
     image: opensearchproject/opensearch:1.3.0
     environment:
       - discovery.type=single-node
+      - plugins.security.disabled=true # somente para testes locais, comentar em produção
     ports:
       - "9202:9200"
     volumes:

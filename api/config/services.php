@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'opensearch' => [
+        'hosts' => env('OPENSEARCH_HOSTS', (config('app.env') === 'production' ? 'https://' : 'http://') . 'opensearch:9200'),
+        'verify_ssl' => env('OPENSEARCH_VERIFY_SSL', config('app.env') === 'production'),
+    ]
+
 ];
