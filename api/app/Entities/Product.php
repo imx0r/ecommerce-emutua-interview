@@ -78,6 +78,7 @@ class Product
     public function toArray($cast = true): Collection
     {
         return Collection::make([
+            'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
             'price' => $this->price,
