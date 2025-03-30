@@ -31,8 +31,8 @@ class ProductController extends Controller
 
     public function show(Request $request, int $id): \Illuminate\Http\JsonResponse
     {
-        $product = Cache::remember(Str::replace(config('cache.keys.product.product.key'), ':id', $id), config('cache.keys.product.product.ttl'), function () use ($id) {
-            return $this->products->byId($id)->toArray();
+        $product = Cache::remember(Str::replace(':id', $id, config('cache.keys.product.product.key')), config('cache.keys.product.product.ttl'), function () use ($id) {
+            return $this->products->byId($id);
         });
         return response()->json($product, HttpResponse::HTTP_OK);
     }

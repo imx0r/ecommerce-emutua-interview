@@ -65,7 +65,7 @@ class ProductCacheSubscriber implements EventSubscriber
     private function getCacheProductParams($id): array
     {
         return [
-            "key" => Str::replace(config('cache.keys.product.product.key'), ':id', $id),
+            "key" => Str::replace(':id', $id, config('cache.keys.product.product.key')),
             "ttl" => config('cache.keys.product.product.ttl'),
         ];
     }
