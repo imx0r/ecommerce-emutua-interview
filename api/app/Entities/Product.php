@@ -75,7 +75,7 @@ class Product
         $this->category = $category;
     }
 
-    public function toArray($cast = true): Collection
+    public function toCollection($cast = true): Collection
     {
         return Collection::make([
             'id' => $this->id,
@@ -84,5 +84,10 @@ class Product
             'price' => $this->price,
             'category' => $cast ? EProductCategory::from($this->category->getName())->toString() : $this->category
         ]);
+    }
+
+    public function toArray($cast = true): array
+    {
+        return $this->toCollection($cast)->toArray();
     }
 }
