@@ -16,9 +16,13 @@ return [
     'failed' => 'Essas credenciais não foram encontradas em nossos registros.',
     'password' => 'A senha informada está incorreta.',
     'throttle' => 'Muitas tentativas de login. Tente novamente em :seconds segundos.',
-    'create_failed' => 'Houve uma falha ao criar uma nova conta.',
-    'login_failed' => 'As informações estão incorretas.',
-    'login_success' => 'Você foi logado com sucesso.',
+    'create' => [
+        'failed' => 'Houve uma falha ao criar sua conta.',
+    ],
+    'login' => [
+        'success' => 'Você foi logado com sucesso.',
+        'failed' => 'As informações estão incorretas.',
+    ],
     'logged_out' => 'Você foi deslogado com sucesso.',
 
 ];
