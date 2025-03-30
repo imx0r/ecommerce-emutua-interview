@@ -6,6 +6,7 @@ use App\Enums\EResponseStatus;
 use App\Exceptions\ProductException;
 use App\Http\Requests\CreateOrUpdateProductRequest;
 use App\Http\Requests\DeleteProductRequest;
+use App\Service\OpenSearchService;
 use App\Service\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -16,9 +17,12 @@ class ProductController extends Controller
 {
     private ProductService $products;
 
-    public function __construct(ProductService $products)
+    private OpenSearchService $openSearchService;
+
+    public function __construct(ProductService $products, OpenSearchService $openSearchService)
     {
         $this->products = $products;
+        $this->openSearchService = $openSearchService;
     }
 
     public function index(Request $request): \Illuminate\Http\JsonResponse
@@ -32,8 +36,11 @@ class ProductController extends Controller
     public function show(Request $request, int $id): \Illuminate\Http\JsonResponse
     {
         $product = Cache::remember(Str::replace(':id', $id, config('cache.keys.product.product.key')), config('cache.keys.product.product.ttl'), function () use ($id) {
-            return $this->products->byId($id);
+            return $this->products->byId($id)->toArray();
         });
+        if ($product) {
+            $this->openSearchService->indexProduct($product->toArray());
+        }
         return response()->json($product, HttpResponse::HTTP_OK);
     }
 
