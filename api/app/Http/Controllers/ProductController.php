@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateProductRequest;
+use App\Enums\EResponseStatus;
+use App\Exceptions\ProductException;
+use App\Http\Requests\CreateOrUpdateProductRequest;
+use App\Http\Requests\DeleteProductRequest;
 use App\Service\ProductService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
@@ -23,26 +26,42 @@ class ProductController extends Controller
 
     public function show(Request $request, int $id): \Illuminate\Http\JsonResponse
     {
-        return response()->json($this->products->byId($id), HttpResponse::HTTP_OK);
+        try {
+            return response()->json($this->products->byId($id)->toArray(), HttpResponse::HTTP_OK);
+        } catch (ProductException $e) {
+            return response()->json(["status" => EResponseStatus::FAILED, "message" => $e->getMessage()], HttpResponse::HTTP_BAD_REQUEST);
+        }
     }
 
-    public function store(CreateProductRequest $request): \Illuminate\Http\JsonResponse
+    public function store(CreateOrUpdateProductRequest $request): \Illuminate\Http\JsonResponse
     {
-        $product = $this->products->createProduct($request->validated());
-        return response()->json($product, HttpResponse::HTTP_CREATED);
+        try {
+            $product = $this->products->createProduct($request->validated());
+            return response()->json($product->toArray(), HttpResponse::HTTP_CREATED);
+        } catch (ProductException $e) {
+            return response()->json(["status" => EResponseStatus::FAILED, "message" => $e->getMessage()], HttpResponse::HTTP_BAD_REQUEST);
+        }
     }
 
-    public function update(Request $request, int $id): \Illuminate\Http\JsonResponse
+    public function update(CreateOrUpdateProductRequest $request, int $id): \Illuminate\Http\JsonResponse
     {
-        $product = $this->products->byId($id);
-        $product = $this->products->updateProduct($product, $request->validated());
-        return response()->json($product, HttpResponse::HTTP_OK);
+        try {
+            $product = $this->products->byId($id);
+            $product = $this->products->updateProduct($product, $request->validated());
+            return response()->json($product->toArray(), HttpResponse::HTTP_OK);
+        } catch (ProductException $e) {
+            return response()->json(["status" => EResponseStatus::FAILED, "message" => $e->getMessage()], HttpResponse::HTTP_BAD_REQUEST);
+        }
     }
 
-    public function destroy(Request $request, int $id): \Illuminate\Http\JsonResponse
+    public function destroy(DeleteProductRequest $request, int $id): \Illuminate\Http\JsonResponse
     {
-        $product = $this->products->byId($id);
-        $this->products->deleteProduct($product);
-        return response()->json(["status" => "success", "status_code" => HttpResponse::HTTP_OK, "message" => __("product.deleted")], HttpResponse::HTTP_OK);
+        try {
+            $product = $this->products->byId($id);
+            $this->products->deleteProduct($product);
+            return response()->json(["status" => EResponseStatus::SUCCESS, "status_code" => HttpResponse::HTTP_OK, "message" => __("product.delete.success")], HttpResponse::HTTP_OK);
+        } catch (ProductException $e) {
+            return response()->json(["status" => EResponseStatus::FAILED, "message" => $e->getMessage()], HttpResponse::HTTP_BAD_REQUEST);
+        }
     }
 }
