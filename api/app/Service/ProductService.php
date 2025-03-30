@@ -7,7 +7,7 @@ use App\Repositories\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Support\Collection;
 
-class ProductService
+class ProductService extends EntityService
 {
     private EntityManagerInterface $em;
     private ProductRepository $repository;
@@ -20,17 +20,17 @@ class ProductService
 
     public function all(): Collection
     {
-        return $this->repository->findAll();
+        return $this->toData($this->repository->findAll());
     }
 
-    public function byId(int $id): ?Collection
+    public function byId(int $id): Product|null
     {
         return $this->repository->findById($id);
     }
 
     public function byName($name): ?Collection
     {
-        return $this->repository->findByName($name);
+        return $this->toData($this->repository->findByName($name));
     }
 
     public function createProduct($data): Product|null

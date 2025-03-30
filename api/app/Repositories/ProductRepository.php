@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
+use App\Entities\Product;
 use Doctrine\Persistence\ObjectRepository;
-use Illuminate\Support\Collection;
 
 class ProductRepository
 {
@@ -14,30 +14,30 @@ class ProductRepository
         $this->products = $products;
     }
 
-    public function findAll(): Collection
+    /**
+     * @return Product[]
+     */
+    public function findAll(): array
     {
-        return $this->getDataFromArray($this->products->findAll());
+        return $this->products->findAll();
     }
 
-    public function findById(int $id): Collection|null
+    public function findById(int $id): Product|null
     {
-        return $this->products->find($id)?->toArray();
+        return $this->products->find($id);
     }
 
-    public function findAllByName($name): Collection
+    /**
+     * @param $name
+     * @return Product[]
+     */
+    public function findAllByName($name): array
     {
-        return $this->getDataFromArray($this->products->findBy(['name' => $name]));
+        return $this->products->findBy(['name' => $name]);
     }
 
-    public function findByName($name): Collection|null
+    public function findByName($name): Product|null
     {
-        return $this->products->findOneBy(['name' => $name])?->toArray();
-    }
-
-    private function getDataFromArray($array): Collection
-    {
-        return Collection::make($array)->map(function ($product) {
-            return $product->toArray();
-        });
+        return $this->products->findOneBy(['name' => $name]);
     }
 }
