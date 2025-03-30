@@ -45,11 +45,12 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => EUserRole::class,
         ];
     }
 
     public function isAdministrator()
     {
-        return $this->role === EUserRole::ADMINISTRATOR;
+        return $this->role === EUserRole::ADMIN;
     }
 }
