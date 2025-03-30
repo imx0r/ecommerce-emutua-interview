@@ -65,7 +65,7 @@ class Product
         $this->price = $price;
     }
 
-    public function getCategory()
+    public function getCategory(): ProductCategory
     {
         return $this->category;
     }
