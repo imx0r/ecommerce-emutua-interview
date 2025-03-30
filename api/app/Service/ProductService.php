@@ -63,4 +63,10 @@ class ProductService extends EntityService
 
         return $product;
     }
+
+    public function deleteProduct(Product $product): void
+    {
+        $this->em->remove($product);
+        $this->em->flush();
+    }
 }
