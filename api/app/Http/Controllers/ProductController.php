@@ -8,6 +8,8 @@ use App\Http\Requests\CreateOrUpdateProductRequest;
 use App\Http\Requests\DeleteProductRequest;
 use App\Service\ProductService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class ProductController extends Controller
@@ -21,16 +23,18 @@ class ProductController extends Controller
 
     public function index(Request $request): \Illuminate\Http\JsonResponse
     {
-        return response()->json($this->products->all(), HttpResponse::HTTP_OK);
+        $products = Cache::remember('products', now()->addMinutes(30), function () {
+            return $this->products->all();
+        });
+        return response()->json($products, HttpResponse::HTTP_OK);
     }
 
     public function show(Request $request, int $id): \Illuminate\Http\JsonResponse
     {
-        try {
-            return response()->json($this->products->byId($id)->toArray(), HttpResponse::HTTP_OK);
-        } catch (ProductException $e) {
-            return response()->json(["status" => EResponseStatus::FAILED, "message" => $e->getMessage()], HttpResponse::HTTP_BAD_REQUEST);
-        }
+        $product = Cache::remember(Str::replace(config('cache.keys.product.product.key'), ':id', $id), config('cache.keys.product.product.ttl'), function () use ($id) {
+            return $this->products->byId($id)->toArray();
+        });
+        return response()->json($product, HttpResponse::HTTP_OK);
     }
 
     public function store(CreateOrUpdateProductRequest $request): \Illuminate\Http\JsonResponse
