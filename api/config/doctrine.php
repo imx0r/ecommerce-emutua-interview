@@ -1,5 +1,7 @@
 <?php
 
+use App\EventSubscriber\ProductCacheSubscriber;
+
 return [
 
     /*
@@ -52,7 +54,9 @@ return [
             */
             'events'        => [
                 'listeners'   => [],
-                'subscribers' => []
+                'subscribers' => [
+                    ProductCacheSubscriber::class
+                ]
             ],
 
             'filters'       => [],
