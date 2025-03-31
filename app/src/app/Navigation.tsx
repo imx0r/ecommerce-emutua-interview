@@ -1,7 +1,25 @@
 import { useAuth } from "@/hooks/auth";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Loading from "@/app/(app)/Loading";
 
 export default function Navigation({ user }: Readonly<{ user: any }>) {
     const { logout } = useAuth();
+    const router = useRouter();
+    
+    const [loggingOut, setLoggingOut] = useState(false);
+    
+    const handleLogout = async (e: any) => {
+        e.preventDefault();
+        
+        setLoggingOut(true);
+        await logout();
+        setLoggingOut(false);
+    }
+    
+    if (loggingOut) return (
+        <Loading text="Saindo, aguarde ..." />
+    );
     
     return (
         <div className="navbar bg-base-300 shadow-sm">
@@ -34,7 +52,7 @@ export default function Navigation({ user }: Readonly<{ user: any }>) {
                             <ul
                                 tabIndex={0}
                                 className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-                                <li><a href="#" onClick={() => logout()}>Sair</a></li>
+                                <li><a href="#" onClick={handleLogout}>Sair</a></li>
                             </ul>
                         </div>
                     </>

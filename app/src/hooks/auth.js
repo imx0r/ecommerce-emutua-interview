@@ -15,6 +15,8 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
                 .catch(error => {
                     if (error.response.status !== 409) throw error
                 });
+        } else {
+            return null;
         }
     });
 
@@ -61,12 +63,13 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
 
         if (!error) {
             const token = localStorage.getItem('token');
-            await axios.post('/api/v1/auth/logout', {}, { headers: { 'Authorization': `Bearer ${token}` }}).then(() => mutate())
+            await axios.post('/api/v1/auth/logout', {}, { headers: { 'Authorization': `Bearer ${token}` }}).then(() => {
+                localStorage.removeItem('token');
+                mutate()
+            });
+            
+            router.push('/');
         }
-
-        localStorage.removeItem('token');
-
-        window.location.pathname = '/'
     }
 
     useEffect(() => {
