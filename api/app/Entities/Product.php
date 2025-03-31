@@ -21,7 +21,7 @@ class Product
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
     protected string $price;
 
-    #[ORM\ManyToOne(targetEntity: ProductCategory::class, inversedBy: 'products')]
+    #[ORM\ManyToOne(targetEntity: ProductCategory::class, fetch: 'EAGER', inversedBy: 'products')]
     protected ProductCategory $category;
 
     public function __construct($name)
