@@ -23,7 +23,7 @@ class AuthController extends Controller
             ], HttpResponse::HTTP_BAD_REQUEST);
         }
 
-        $token = $user->createToken(config('authToken'))->plainTextToken;
+        $token = $user->createToken('authToken')->plainTextToken;
         return response()->json([
             "user" => $user,
             "token" => $token,
