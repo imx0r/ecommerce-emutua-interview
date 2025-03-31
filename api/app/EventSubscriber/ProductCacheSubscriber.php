@@ -60,10 +60,12 @@ class ProductCacheSubscriber implements EventSubscriber
     {
         $entity = $args->getObject();
         if ($entity instanceof Product) {
-            $entityId = $entity->getId();
             if ($args::class === "Doctrine\ORM\Event\PostRemoveEventArgs") {
                 $entityId = $entity->getStoredId();
+            } else {
+                $entityId = $entity->getId();
             }
+
             Cache::forget($this->getCacheProductParams($entityId)["key"]);
         }
     }
