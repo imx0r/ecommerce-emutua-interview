@@ -28,8 +28,9 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         setErrors([])
 
         axios
-            .post('/api/v1/auth/register', props)
+            .post('/api/v1/auth/register', props.data)
             .then((res) => {
+                localStorage.setItem('token', res.data.token)
                 mutate()
             })
             .catch(error => {
