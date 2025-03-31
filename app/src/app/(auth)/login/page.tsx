@@ -44,24 +44,31 @@ export default function LoginPage() {
     
     return (
         <div className="flex flex-col items-center justify-items-center max-w-xl w-full mx-auto">
-            <form className="flex flex-col gap-1 w-full my-5" onSubmit={handleSubmit}>
-                <input 
-                    className="input w-full"
-                    type="text" 
-                    value={username} 
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Usuário ..."
-                    
-                />
+            <form className="flex flex-col gap-1.5 w-full my-5" onSubmit={handleSubmit}>
+                <label className="floating-label">
+                    <span>Usuário</span>
+                    <input
+                        className="input input-bordered w-full"
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        placeholder="Usuário ..."
+                        required
+                    />
+                </label>
                 <InputError messages={errors.username} className="mt-2" />
-                <input 
-                    className="input w-full"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Senha ..."
-                    
-                />
+                
+                <label className="floating-label">
+                    <span>Senha</span>
+                    <input
+                        className="input input-bordered w-full"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Senha ..."
+                        required
+                    />
+                </label>
                 <InputError messages={errors.password} className="mt-2" />
                 <button type="submit" className="btn btn-success" disabled={isLoading}>Entrar</button>
                 <a href="/" className="btn btn-ghost">Voltar ao Início</a>
