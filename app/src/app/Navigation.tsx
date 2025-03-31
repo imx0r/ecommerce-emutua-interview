@@ -35,16 +35,18 @@ export default function Navigation({ user }: Readonly<{ user: any }>) {
                     </div>
                     :
                     <>
-                        <div className="dropdown dropdown-end">
-                            <div tabIndex={0} role="button" className="btn btn-ghost">
-                                Administrar
+                        { user.role === 2 && (
+                            <div className="dropdown dropdown-end">
+                                <div tabIndex={0} role="button" className="btn btn-ghost">
+                                    Administrar
+                                </div>
+                                <ul
+                                    tabIndex={0}
+                                    className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                                    <li><a href="/administrar">Produtos</a></li>
+                                </ul>
                             </div>
-                            <ul
-                                tabIndex={0}
-                                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-                                <li><a href="/administrar">Produtos</a></li>
-                            </ul>
-                        </div>
+                        ) }
                         <div className="dropdown dropdown-end">
                             <div tabIndex={0} role="button" className="btn btn-neutral">
                                 Olá, {user.username}!
