@@ -3,12 +3,15 @@
 namespace App\Entities;
 
 use App\Enums\EProductCategory;
+use App\Traits\StoreIdAfterDeletionEntity;
 use Doctrine\ORM\Mapping AS ORM;
 use Illuminate\Support\Collection;
 
 #[ORM\Table(name: 'products'), ORM\Entity]
 class Product
 {
+    use StoreIdAfterDeletionEntity;
+
     #[ORM\Id, ORM\GeneratedValue(strategy: 'AUTO'), ORM\Column(type: 'integer')]
     protected int $id;
 
