@@ -35,10 +35,20 @@ class ProductController extends Controller
 
     public function show(Request $request, int $id): \Illuminate\Http\JsonResponse
     {
-        $product = Cache::remember(Str::replace(':id', $id, config('cache.keys.product.product.key')), config('cache.keys.product.product.ttl'), function () use ($id) {
-            return $this->products->byId($id);
-        });
-        return response()->json($product, HttpResponse::HTTP_OK);
+        try {
+            $product = Cache::remember(Str::replace(':id', $id, config('cache.keys.product.product.key')), config('cache.keys.product.product.ttl'), function () use ($id) {
+                return $this->products->byId($id);
+            });
+            return response()->json($product->toArray(), HttpResponse::HTTP_OK);
+        } catch (ProductException $e) {
+            return response()->json(["status" => EResponseStatus::FAILED, "message" => $e->getMessage()], HttpResponse::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function search(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $products = $this->openSearchService->searchProducts($request->query('q'));
+        return response()->json($products, HttpResponse::HTTP_OK);
     }
 
     public function store(CreateOrUpdateProductRequest $request): \Illuminate\Http\JsonResponse
@@ -84,7 +94,11 @@ class ProductController extends Controller
         try {
             $product = $this->products->byId($id);
             $this->products->deleteProduct($product);
-            $this->openSearchService->removeProduct($id);
+
+            if ($this->openSearchService->exists($id)) {
+                $this->openSearchService->removeProduct($id);
+            }
+
             return response()->json(["status" => EResponseStatus::SUCCESS, "status_code" => HttpResponse::HTTP_OK, "message" => __("product.delete.success")], HttpResponse::HTTP_OK);
         } catch (ProductException $e) {
             return response()->json(["status" => EResponseStatus::FAILED, "message" => $e->getMessage()], HttpResponse::HTTP_BAD_REQUEST);
