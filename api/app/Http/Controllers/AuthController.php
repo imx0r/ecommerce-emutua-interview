@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -29,7 +30,7 @@ class AuthController extends Controller
         ], HttpResponse::HTTP_CREATED);
     }
 
-    public function login(Request $request): \Illuminate\Http\JsonResponse
+    public function login(LoginRequest $request): \Illuminate\Http\JsonResponse
     {
         $user = User::where("username", $request->input("username"))->first();
         if (!$user || !Hash::check($request->input("password"), $user->password)) {
