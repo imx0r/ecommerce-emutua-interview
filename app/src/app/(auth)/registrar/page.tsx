@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/auth';
 import { useRouter } from 'next/navigation';
 import Loading from "@/app/(app)/Loading";
-import ErrorContainer from "@/components/ErrorContainer";
+import InputError from "@/components/InputError";
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -14,6 +14,7 @@ export default function RegisterPage() {
         redirectIfAuthenticated: '/'
     });
 
+    const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
@@ -34,7 +35,7 @@ export default function RegisterPage() {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
-            await register({ data: { username, password, passwordConfirmation, email }, setErrors, setStatus });
+            await register({ data: { name, username, email, password, password_confirmation: passwordConfirmation }, setErrors, setStatus });
         } catch (error) {
             console.error(`Register failed!`, error);
         }
@@ -46,40 +47,76 @@ export default function RegisterPage() {
 
     return (
         <div className="flex flex-col items-center justify-items-center max-w-xl w-full mx-auto">
-            <ErrorContainer messages={errors} className="mt-2" />
-            <form className="flex flex-col gap-1 w-full my-5" onSubmit={handleSubmit}>
-                <input
-                    className="input w-full"
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Usuário ..."
+            <form className="flex flex-col gap-1.5 w-full my-5" onSubmit={handleSubmit}>
+                <label className="floating-label">
+                    <span>Nome</span>
+                    <input
+                        name="name"
+                        className="input input-bordered w-full"
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Nome ..."
+                        required
+                    />
+                </label>
+                <InputError messages={errors.name} className="mt-2" />
+                
+                <label className="floating-label">
+                    <span>Usuário</span>
+                    <input
+                        name="username"
+                        className="input input-bordered w-full"
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        placeholder="Usuário ..."
+                        required
+                    />
+                </label>
+                <InputError messages={errors.username} className="mt-2" />
+                
+                <label className="floating-label">
+                    <span>E-mail</span>
+                    <input
+                        name="email"
+                        className="input input-bordered w-full"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="E-mail ..."
+                        required
+                    />
+                </label>
+                <InputError messages={errors.email} className="mt-2" />
 
-                />
-                <input
-                    className="input w-full"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="E-mail ..."
-
-                />
-                <input
-                    className="input w-full"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Senha ..."
-
-                />
-                <input
-                    className="input w-full"
-                    type="password"
-                    value={passwordConfirmation}
-                    onChange={(e) => setPasswordConfirmation(e.target.value)}
-                    placeholder="Confirme sua senha ..."
-
-                />
+                <label className="floating-label">
+                    <span>Senha</span>
+                    <input
+                        name="password"
+                        className="input input-bordered w-full"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Senha ..."
+                        required
+                    />
+                </label>
+                <InputError messages={errors.password} className="mt-2" />
+                
+                <label className="floating-label">
+                    <span>Confirme a senha</span>
+                    <input
+                        name="password_confirmation"
+                        className="input input-bordered w-full"
+                        type="password"
+                        value={passwordConfirmation}
+                        onChange={(e) => setPasswordConfirmation(e.target.value)}
+                        placeholder="Confirme sua senha ..."
+                        required
+                    />
+                </label>
+                <InputError messages={errors.password_confirmation} className="mt-2" />
                 <button type="submit" className="btn btn-success" disabled={isLoading}>Registrar</button>
                 <a href="/" className="btn btn-ghost">Voltar ao Início</a>
                 <div className="divider">ou</div>
