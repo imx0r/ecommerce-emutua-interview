@@ -1,7 +1,11 @@
 import useSWR from 'swr'
 import axios from '@/lib/axios'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
+    const router = useRouter()
+
     const { data: user, error, isLoading, mutate } = useSWR('/auth/me', async () => {
         const token = localStorage.getItem('token');
         if (token) {
@@ -16,8 +20,50 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
 
     const csrf = () => axios.get('/sanctum/csrf-cookie')
 
+    const login = async ({ setErrors, setStatus, ...props }) => {
+        await csrf()
+
+        setErrors([])
+        setStatus(null)
+
+        axios
+            .post('/api/v1/auth/login', props)
+            .then((res) => {
+                mutate();
+                localStorage.setItem('token', res.data.token);
+            })
+            .catch(error => {
+                if (error.response.status !== 422) throw error
+                setErrors(error.response.data.errors)
+            })
+    }
+
+    const logout = async () => {
+        if (!user) {
+            return;
+        }
+
+        if (!error) {
+            const token = localStorage.getItem('token');
+            await axios.post('/api/v1/auth/logout', {}, { headers: { 'Authorization': `Bearer ${token}` }}).then(() => mutate())
+        }
+
+        localStorage.removeItem('token');
+
+        window.location.pathname = '/'
+    }
+
+    useEffect(() => {
+        if (middleware === 'guest' && redirectIfAuthenticated && user)
+            router.push(redirectIfAuthenticated)
+
+        if (middleware === 'auth' && error) logout()
+    }, [user, error])
+
     return {
         user,
+        login,
+        logout,
         isLoading
     }
 }
