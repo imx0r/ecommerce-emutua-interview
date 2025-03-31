@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use OpenSearch\ClientBuilder;
 
@@ -18,26 +19,48 @@ class OpenSearchService
             ->build();
     }
 
-    public function indexProduct(array $product): array|string|null
+    public function indexProduct(array $product): Collection
     {
         $params = [
             'index' => 'products',
             'id' => $product['id'],
             'body' => $product
         ];
-        return $this->client->index($params);
+        return Collection::make($this->client->index($params));
     }
 
-    public function removeProduct($id): array|string|null
+    public function removeProduct($id): Collection
     {
         $params = [
             'index' => 'products',
             'id' => $id,
         ];
-        return $this->client->delete($params);
+
+        return Collection::make($this->client->delete($params));
     }
 
-    public function searchProducts(string $search): array|string|null
+    public function searchById($id): Collection
+    {
+        $params = [
+            'index' => 'products',
+            'size' => 1,
+            'body' => [
+                'query' => [
+                    'bool' => [
+                        'filter' => [
+                            'term' => [
+                                '_id' => $id,
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        return Collection::make($this->client->search($params));
+    }
+
+    public function searchProducts(string $search): Collection
     {
         $params = [
             'index' => 'products',
@@ -51,6 +74,11 @@ class OpenSearchService
             ]
         ];
 
-        return $this->client->search($params);
+        return Collection::make($this->client->search($params));
+    }
+
+    public function exists($id): bool
+    {
+        return $this->searchById($id)->dot()->get('hits.total.value') > 0;
     }
 }
