@@ -8,7 +8,7 @@ import Loading from "@/app/(app)/Loading";
 import Navigation from "@/app/Navigation";
 
 export default function Home() {
-    const { user, logout, isLoading } = useAuth();
+    const { user, isLoading } = useAuth();
 
     const { data: products, error, isLoading: isLoadingProducts, mutate: mutateProducts } = useSWR('/api/v1/products', async () => {
         return axios.get('/api/v1/products')
@@ -50,7 +50,7 @@ export default function Home() {
     return (
         <>
             <div className="relative flex flex-col gap-2 max-w-5xl w-full min-h-screen mx-auto">
-                <Navigation />
+                <Navigation user={user} />
                 <div className="flex flex-col w-full gap-2">
                     <h2 className="text-2xl font-bold mt-3">Produtos</h2>
                     <div className="flex flex-row items-baseline gap-2">

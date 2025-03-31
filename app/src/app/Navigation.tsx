@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/auth";
 
-export default function Navigation() {
-    const { user, logout } = useAuth();
+export default function Navigation({ user }: Readonly<{ user: any }>) {
+    const { logout } = useAuth();
     
     return (
         <div className="navbar bg-base-300 shadow-sm">
