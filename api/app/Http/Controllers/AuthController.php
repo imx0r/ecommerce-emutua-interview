@@ -35,7 +35,7 @@ class AuthController extends Controller
         $user = User::where("username", $request->input("username"))->first();
         if (!$user || !Hash::check($request->input("password"), $user->password)) {
             throw ValidationException::withMessages([
-                "username" => [__('auth.login.failed')],
+                "password" => [__('auth.login.failed')],
             ]);
         }
 
