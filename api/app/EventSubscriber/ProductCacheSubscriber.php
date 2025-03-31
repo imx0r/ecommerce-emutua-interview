@@ -16,6 +16,7 @@ class ProductCacheSubscriber implements EventSubscriber
         return [
             Events::postPersist,
             Events::postUpdate,
+            Events::preRemove,
             Events::postRemove,
         ];
     }
@@ -32,10 +33,16 @@ class ProductCacheSubscriber implements EventSubscriber
         $this->createCache($eventArgs);
     }
 
+    public function preRemove(LifecycleEventArgs $eventArgs): void
+    {
+        $entity = $eventArgs->getObject();
+        $entity->setStoredId($entity->getId());
+    }
+
     public function postRemove(LifecycleEventArgs $eventArgs): void
     {
-        $this->invalidateProductsCache();
         $this->invalidateProductCache($eventArgs);
+        $this->invalidateProductsCache();
     }
 
     private function createCache(LifecycleEventArgs $args): void
@@ -53,7 +60,11 @@ class ProductCacheSubscriber implements EventSubscriber
     {
         $entity = $args->getObject();
         if ($entity instanceof Product) {
-            Cache::forget($this->getCacheProductParams($entity->getId())["key"]);
+            $entityId = $entity->getId();
+            if ($args::class === "Doctrine\ORM\Event\PostRemoveEventArgs") {
+                $entityId = $entity->getStoredId();
+            }
+            Cache::forget($this->getCacheProductParams($entityId)["key"]);
         }
     }
 
