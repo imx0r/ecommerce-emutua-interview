@@ -15,5 +15,12 @@ Route::prefix("v1")->group(function () {
         });
     });
 
-    Route::apiResource("products", ProductController::class);
+    Route::prefix("products")->group(function () {
+        Route::get('/', [ProductController::class, 'index']);
+        Route::post('/', [ProductController::class, 'store']);
+        Route::get('/search', [ProductController::class, 'search']);
+        Route::get('/{product}', [ProductController::class, 'show'])->whereNumber('product');
+        Route::put('/{product}', [ProductController::class, 'update'])->whereNumber('product');
+        Route::delete('/{product}', [ProductController::class, 'destroy'])->whereNumber('product');
+    });
 });
