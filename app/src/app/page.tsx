@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/auth'
 import axios from "@/lib/axios";
 import Loading from "@/app/(app)/Loading";
 import Navigation from "@/app/Navigation";
+import Header from "@/app/(app)/Header";
 
 export default function Home() {
     const { user, isLoading } = useAuth();
@@ -52,7 +53,7 @@ export default function Home() {
             <div className="relative flex flex-col gap-2 max-w-5xl w-full min-h-screen mx-auto">
                 <Navigation user={user} />
                 <div className="flex flex-col w-full gap-2">
-                    <h2 className="text-2xl font-bold mt-3">Produtos</h2>
+                    <Header title="Produtos" />
                     <div className="flex flex-row items-baseline gap-2">
                         <form onSubmit={searchProduct}>
                             <div className="join my-3">
