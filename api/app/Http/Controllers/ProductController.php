@@ -47,7 +47,7 @@ class ProductController extends Controller
 
     public function search(Request $request): \Illuminate\Http\JsonResponse
     {
-        $products = $this->openSearchService->searchProducts($request->query('q'));
+        $products = $this->openSearchService->searchProducts($request->query('q', ''));
         return response()->json($products, HttpResponse::HTTP_OK);
     }
 
