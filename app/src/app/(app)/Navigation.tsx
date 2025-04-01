@@ -17,7 +17,7 @@ export default function Navigation({ user }: Readonly<{ user: any }>) {
                 </div>
                 <div className="dropdown dropdown-end">
                     <div tabIndex={0} role="button" className="btn btn-neutral">
-                        <span>Olá, {user.username}!</span>
+                        <span>Olá, {user.name}!</span>
                     </div>
                     <ul
                         tabIndex={0}
