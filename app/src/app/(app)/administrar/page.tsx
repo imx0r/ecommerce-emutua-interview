@@ -51,7 +51,7 @@ export default function Administrar() {
     }
     
     const createOrEditProduct = async () => {
-        if (id) {
+        if (id && id !== 0) {
             return await onSaveProduct();
         }
         
@@ -59,68 +59,68 @@ export default function Administrar() {
     }
     
     const onCreateProduct = async () => {
-        const token = localStorage.getItem('token');
-        
-        const res = await axios.post(`/api/v1/products`, {
-            name,
-            description,
-            price,
-            category
-        }, {
-            headers: {
-                Authorization: `Bearer ${token}`
+        try {
+            const token = localStorage.getItem('token');
+            const res = await axios.post(`/api/v1/products`, {
+                name,
+                description,
+                price,
+                category
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (res.status === 201) {
+                mutate();
+                setIsSuccess(true);
+                setIsEditing(false);
+                setErrors([]);
+                setTimeout(() => {
+                    setId(0);
+                    setName('');
+                    setDescription('');
+                    setPrice('');
+                    setCategory('0');
+                    createEditModal?.current?.close();
+                    setIsSuccess(false);
+                }, 2000);
             }
-        });
-        if (res.status === 201) {
-            mutate();
-            setIsSuccess(true);
-            setIsEditing(false);
-            setTimeout(() => {
-                setId(0);
-                setName('');
-                setDescription('');
-                setPrice('');
-                setCategory('0');
-                createEditModal?.current?.close();
-                setIsSuccess(false);
-            }, 2000);
-        } else {
-            if (res.status === 422) {
-                setErrors(res.data.errors)
-            }
+        } catch (e: any) {
+            setErrors(e.response.data.errors)
         }
     }
     
     const onSaveProduct = async () => {
-        const token = localStorage.getItem('token');
-        
-        const res = await axios.put(`/api/v1/products/${id}`, {
-            name,
-            description,
-            price,
-            category
-        }, {
-            headers: {
-                Authorization: `Bearer ${token}`
+        try {
+            const token = localStorage.getItem('token');
+            const res = await axios.put(`/api/v1/products/${id}`, {
+                name,
+                description,
+                price,
+                category
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (res.status === 200) {
+                mutate();
+                setIsSuccess(true);
+                setIsEditing(false);
+                setErrors([]);
+                setTimeout(() => {
+                    setId(0);
+                    setName('');
+                    setDescription('');
+                    setPrice('');
+                    setCategory('0');
+                    createEditModal?.current?.close();
+                    setIsSuccess(false);
+                }, 2000);
             }
-        });
-        if (res.status === 200) {
-            mutate();
-            setIsSuccess(true);
-            setIsEditing(false);
-            setTimeout(() => {
-                setId(0);
-                setName('');
-                setDescription('');
-                setPrice('');
-                setCategory('0');
-                createEditModal?.current?.close();
-                setIsSuccess(false);
-            }, 2000);
-        } else {
-            if (res.status === 422) {
-                setErrors(res.data.errors)
-            }
+        } catch (e: any) {
+            setErrors(e.response.data.errors)
         }
     }
     
@@ -132,20 +132,25 @@ export default function Administrar() {
     }
     
     const onDeleteProduct = async () => {
-        const token = localStorage.getItem('token');
-
-        const res = await axios.delete(`/api/v1/products/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
+        try {
+            const token = localStorage.getItem('token');
+            const res = await axios.delete(`/api/v1/products/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (res.status === 200) {
+                mutate();
+                setIsSuccess(true);
+                setErrors([]);
+                setTimeout(() => {
+                    trashModal?.current?.close();
+                    setId(0);
+                    setIsSuccess(false);
+                }, 2000);
             }
-        });
-        if (res.status === 200) {
-            mutate();
-            setIsSuccess(true);
-            setTimeout(() => {
-                trashModal?.current?.close();
-                setIsSuccess(false);
-            }, 2000);
+        } catch (e: any) {
+            setErrors(e.response.data.errors);
         }
     }
     
@@ -153,7 +158,9 @@ export default function Administrar() {
         <>
             <Header title="Administrar Produtos" actions={<><button className="btn btn-neutral" onClick={openCreateEditModal}>Criar Produto</button></>}/>
             <div className="flex flex-col w-full gap-2">
-                {isLoading ? (<span>Carregando produtos ...</span>) : products.map((product: any, i: number) => {
+                {isLoading ? (<span>Carregando produtos ...</span>) : products.length <= 0 ? (
+                    <>Não há produtos cadastrados, clica em "Criar Produto" e crie seu primeiro produto!</>
+                ) :  products.map((product: any, i: number) => {
                     return (
                         <ul className="list bg-base-200 rounded-box" key={i}>
                             <li className="list-row">
@@ -189,7 +196,7 @@ export default function Administrar() {
                     ) : (
                         <>
                             <h3 className="text-lg font-bold">{ isEditing ? 'Editar' : 'Criar' } Produto</h3>
-                            <form className="flex flex-col gap-2.5 py-4">
+                            <form className="flex flex-col py-4">
                                 <label className="floating-label">
                                     <span>Nome do Produto</span>
                                     <input
@@ -204,7 +211,7 @@ export default function Administrar() {
                                 </label>
                                 <InputError messages={errors.name} className="mt-2"/>
 
-                                <label className="floating-label">
+                                <label className="floating-label mt-3">
                                     <span>Descrição do Produto</span>
                                     <textarea
                                         name="description"
@@ -217,20 +224,21 @@ export default function Administrar() {
                                 </label>
                                 <InputError messages={errors.description} className="mt-2"/>
 
-                                <label className="floating-label">
+                                <label className="floating-label mt-3">
                                     <span>Preço</span>
                                     <NumericFormat
+                                        className="input input-bordered w-full"
                                         value={price}
                                         onValueChange={(values) => setPrice(values.value)}
                                         thousandSeparator={true}
                                         decimalScale={2}
                                         fixedDecimalScale={true}
-                                        className="input input-bordered w-full"
+                                        placeholder="Preço ..."
                                     />
                                 </label>
                                 <InputError messages={errors.price} className="mt-2"/>
 
-                                <label className="floating-label">
+                                <label className="floating-label mt-3">
                                     <span>Categoria</span>
                                     <select
                                         name="category"
@@ -249,7 +257,7 @@ export default function Administrar() {
                                 <InputError messages={errors.category} className="mt-2"/>
                             </form>
                             <div className="modal-action">
-                                <button className="btn btn-success" onClick={createOrEditProduct}>Salvar</button>
+                                <button className="btn btn-success" onClick={createOrEditProduct}>{isEditing ? 'Salvar' : 'Criar'}</button>
                                 <form method="dialog">
                                     <button className="btn">Fechar</button>
                                 </form>
