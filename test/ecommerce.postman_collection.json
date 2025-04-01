@@ -1,0 +1,1026 @@
+{
+	"info": {
+		"_postman_id": "c3254d0f-da57-4f6f-8266-366adb882cff",
+		"name": "ecommerce",
+		"description": "API para a aplicação de gerenciamento de produtos do teste para eMutua Digital.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34528532"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}{{auth_uri}}/logout",
+							"host": [
+								"{{api_url}}{{auth_uri}}"
+							],
+							"path": [
+								"logout"
+							]
+						},
+						"description": "Desloga o usuário do sistema, deletando e invalidando o token atualmente usado."
+					},
+					"response": [
+						{
+							"name": "Example",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}{{auth_uri}}/logout",
+									"host": [
+										"{{api_url}}{{auth_uri}}"
+									],
+									"path": [
+										"logout"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.4"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.28"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 30 Mar 2025 13:57:23 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"message\": \"Você foi deslogado com sucesso.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Logged In User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}{{auth_uri}}/me",
+							"host": [
+								"{{api_url}}{{auth_uri}}"
+							],
+							"path": [
+								"me"
+							]
+						},
+						"description": "Obtem as informações do usuário logado atualmente."
+					},
+					"response": [
+						{
+							"name": "Example",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}{{auth_uri}}/me",
+									"host": [
+										"{{api_url}}{{auth_uri}}"
+									],
+									"path": [
+										"me"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.4"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.28"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 01 Apr 2025 06:04:31 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:3000"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "XSRF-TOKEN=eyJpdiI6IklPNVlvREUxVmo3amR6alBDV0xTN0E9PSIsInZhbHVlIjoibmhDKzd5QUhYUFRvZkt4djdWTHpTVWxNaWIrVDBTdEFaRnhXcTdsb01pQW83b2dJNzJIZ1g2ZnpxcVlIVi9DZkVnMzRMSzhnYndZa3FQS0JzRVVLUXRiQUhvaTJxNXI3aCt5Smp1NHJEaWg4RERrbk9iaHhHMzZKeWw4TnRROFoiLCJtYWMiOiJmMGFlM2E3N2U2Y2I3MDQ5YjAyNTYzYTIzMjUzOGE5ZGM4NzFjMjhhMTk5OGMxYmRmNDMxNzc2ZTFjYWY3NjhlIiwidGFnIjoiIn0%3D; expires=Tue, 01 Apr 2025 08:04:31 GMT; Max-Age=7200; path=/; samesite=lax"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "ecommerce_session=eyJpdiI6IkVWOGtOTnBIdURuWGY1akNDZHJySmc9PSIsInZhbHVlIjoiOW50cEcvdDlITXNZYXlYSnpQN1l6bElVb2xBaEUxeE45YUZpNlREZUtKUXlTS3dYak1uSkhCWTZ5QUhXdDk2MTlvTXZJckNBUGpLTVpveGM1ZUk5YTliSnhZbTF3ZDl6Vk85QXE2b0VwdStIUkpxakdvS2xQZzVLWUZpc0x1L3IiLCJtYWMiOiI2YTIzNGZkNDkwN2UyMTk2MjA5YTIzMDMyYzM0M2YyY2M0YmMyZjRjNDUyOWIyMjE0MTI0MGRmOTJhOWM4NzhiIiwidGFnIjoiIn0%3D; expires=Tue, 01 Apr 2025 08:04:31 GMT; Max-Age=7200; path=/; httponly; samesite=lax"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"name\": \"Administrator\",\n    \"username\": \"admin\",\n    \"email\": \"admin@admin.com\",\n    \"email_verified_at\": null,\n    \"role\": 2,\n    \"created_at\": \"2025-04-01T03:39:34.000000Z\",\n    \"updated_at\": null\n}"
+						}
+					]
+				}
+			],
+			"description": "Todas as requisições referentes ao usuário logado. É necessário estar logado e com um `token` definido."
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}{{products_uri}}",
+							"host": [
+								"{{api_url}}{{products_uri}}"
+							]
+						},
+						"description": "Obtem a lista de todos os produtos."
+					},
+					"response": [
+						{
+							"name": "Example",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}{{products_uri}}",
+									"host": [
+										"{{api_url}}{{products_uri}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.4"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.28"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 30 Mar 2025 01:59:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"name\": \"Doloribus\",\n        \"description\": \"Itaque reiciendis laborum est velit. Veniam earum aut perferendis ut ad quia non. Est et enim rerum totam id quod et.\",\n        \"price\": \"494.00\",\n        \"category\": \"Saúde\"\n    },\n    {\n        \"name\": \"Qui\",\n        \"description\": \"Eligendi voluptatum saepe doloribus qui. Omnis officia adipisci facilis sunt quo ut voluptatem. Praesentium ipsum et sit doloremque vero neque.\",\n        \"price\": \"405.00\",\n        \"category\": \"Eletrônicos\"\n    },\n    {\n        \"name\": \"Veniam\",\n        \"description\": \"Ad quod reiciendis magni et. Dolores temporibus id sit fuga. Sed molestias commodi eligendi et labore adipisci. Eos neque ut sed est iusto.\",\n        \"price\": \"216.00\",\n        \"category\": \"Genéricos\"\n    },\n    {\n        \"name\": \"Voluptas\",\n        \"description\": \"Sit libero itaque architecto nisi numquam hic. Nam molestias repellendus a occaecati voluptates expedita. Error porro dolores explicabo aliquam et sint quia.\",\n        \"price\": \"369.00\",\n        \"category\": \"Eletrônicos\"\n    },\n    {\n        \"name\": \"Cum\",\n        \"description\": \"Deserunt soluta sit tenetur quo sapiente voluptatibus et. Dicta occaecati eius debitis harum porro mollitia omnis. Laborum hic quae doloremque vel quae ducimus. Qui maxime minus est dolore.\",\n        \"price\": \"170.00\",\n        \"category\": \"Mobília\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Get Product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}{{products_uri}}/11",
+							"host": [
+								"{{api_url}}{{products_uri}}"
+							],
+							"path": [
+								"11"
+							]
+						},
+						"description": "Obtem um único produto pelo ID."
+					},
+					"response": [
+						{
+							"name": "Example",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}{{products_uri}}/1",
+									"host": [
+										"{{api_url}}{{products_uri}}"
+									],
+									"path": [
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.4"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.28"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 30 Mar 2025 02:02:00 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"name\": \"Doloribus\",\n    \"description\": \"Itaque reiciendis laborum est velit. Veniam earum aut perferendis ut ad quia non. Est et enim rerum totam id quod et.\",\n    \"price\": \"494.00\",\n    \"category\": \"Saúde\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Um Produto 6\",\n    \"description\": \"Um produto teste qualquer\",\n    \"price\": 100.2,\n    \"category\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}{{products_uri}}",
+							"host": [
+								"{{api_url}}{{products_uri}}"
+							]
+						},
+						"description": "Cria um novo produto."
+					},
+					"response": [
+						{
+							"name": "Example",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Um Produto\",\n    \"description\": \"Um produto teste qualquer\",\n    \"price\": 100.2,\n    \"category\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}{{products_uri}}",
+									"host": [
+										"{{api_url}}{{products_uri}}"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.4"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.28"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 30 Mar 2025 02:11:20 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"name\": \"Um Produto\",\n    \"description\": \"Um produto teste qualquer\",\n    \"price\": \"100.2\",\n    \"category\": \"Genéricos\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Mais um produto novo\",\n    \"price\": \"96.90\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}{{products_uri}}/13",
+							"host": [
+								"{{api_url}}{{products_uri}}"
+							],
+							"path": [
+								"13"
+							]
+						},
+						"description": "Atualiza um produto existente de acordo com o ID."
+					},
+					"response": [
+						{
+							"name": "Example",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Mais um produto novo\",\n    \"price\": \"96.90\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}{{products_uri}}/13",
+									"host": [
+										"{{api_url}}{{products_uri}}"
+									],
+									"path": [
+										"13"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.4"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.28"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 31 Mar 2025 00:09:48 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 13,\n    \"name\": \"Mais um produto novo\",\n    \"description\": \"Um produto teste qualquer\",\n    \"price\": \"96.90\",\n    \"category\": \"Mobília\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}{{products_uri}}/2",
+							"host": [
+								"{{api_url}}{{products_uri}}"
+							],
+							"path": [
+								"2"
+							]
+						},
+						"description": "Remove um produto de acordo com o ID."
+					},
+					"response": [
+						{
+							"name": "Example",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}{{products_uri}}/2",
+									"host": [
+										"{{api_url}}{{products_uri}}"
+									],
+									"path": [
+										"2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.4"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.28"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 31 Mar 2025 01:04:27 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"message\": \"Produto foi removido com sucesso.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Search Product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}{{products_uri}}/search?q=produto",
+							"host": [
+								"{{api_url}}{{products_uri}}"
+							],
+							"path": [
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "produto"
+								}
+							]
+						},
+						"description": "Busca por um produto de acordo com o valor passado pela query `q`a busca é feita no OpenSearch."
+					},
+					"response": [
+						{
+							"name": "Example",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}{{products_uri}}/1",
+									"host": [
+										"{{api_url}}{{products_uri}}"
+									],
+									"path": [
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.4"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.28"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 30 Mar 2025 02:02:00 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"name\": \"Doloribus\",\n    \"description\": \"Itaque reiciendis laborum est velit. Veniam earum aut perferendis ut ad quia non. Est et enim rerum totam id quod et.\",\n    \"price\": \"494.00\",\n    \"category\": \"Saúde\"\n}"
+						}
+					]
+				}
+			],
+			"description": "Todas as requisições referentes aos produtos. Para `POST`, `PUT`, e `DELETE` é necessário que o `token` esteja definido."
+		},
+		{
+			"name": "OpenSearch",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9202/_cluster/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9202",
+							"path": [
+								"_cluster",
+								"health"
+							]
+						},
+						"description": "Verifica se a instância está sendo executada e se há nodes ativos."
+					},
+					"response": []
+				},
+				{
+					"name": "Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9202/products/_search",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9202",
+							"path": [
+								"products",
+								"_search"
+							]
+						},
+						"description": "Busca por todos os produtos indexados."
+					},
+					"response": []
+				}
+			],
+			"description": "Todas as requisições relacionadas ao OpenSearch."
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"if (response && response.status_code === 200) {",
+									"    pm.collectionVariables.set(\"token\", response.token);",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"p@ass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}{{auth_uri}}/login",
+							"host": [
+								"{{api_url}}{{auth_uri}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "Loga um usuário."
+					},
+					"response": [
+						{
+							"name": "Example",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"p@ass\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}{{auth_uri}}/login",
+									"host": [
+										"{{api_url}}{{auth_uri}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.4"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.28"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 01 Apr 2025 06:02:47 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:3000"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "XSRF-TOKEN=eyJpdiI6InQ0UlVISFJHTHRkaC96djRxTGFFRlE9PSIsInZhbHVlIjoiL3FweWJJQU5LOTUxU2tyKzlwVllWWUZhOUIvTC93R3k1M3dpakVlMXFhbXFmMXdsTzJDQ1I2KzJXamRUTGZQSmhMMjN3UEdoOTRSS2hrRnErdzVhRlRtRkoxK3pwRUtQZld5THcwY2hBbnMrYjc3Nm01RUt5aWpQbTg5cUNOTkIiLCJtYWMiOiI4ZWU3ZTExNzQ1ODU4NDk2N2Y4M2FhMGM1ZWViNmQyMzE4YzE5NjExNjIwYzdmOTQ3YmM4Y2JiZDgxNWE2ODBlIiwidGFnIjoiIn0%3D; expires=Tue, 01 Apr 2025 08:02:47 GMT; Max-Age=7200; path=/; samesite=lax"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "ecommerce_session=eyJpdiI6IkpnTm95MEJYbXE1bHRZMzRHeWVNOWc9PSIsInZhbHVlIjoiR1pIS2h4eE9GZU41TnMweWw3ODNLd2hWeUl5K3RmZWN4bEJQOS8vTjg3cFNVN2FJTXpVeEI4NCtXSTdrN1FJM3R5anZUdGtPbTIwaG45QmZ6T0g0STMyNVhRTFBxUk9KWlJmaC9KdmJvQmxRUWcvbnp3RmdUS2ZPMExoOXRaMUMiLCJtYWMiOiIzZmM5YzA2ZDc4NzljZDc4YTMxYmQ3NzU5ZDc2NTNkOTBmMTZhY2Q3YjgzMDljYWJjNDUzOGRkNjlhMGY4OWNjIiwidGFnIjoiIn0%3D; expires=Tue, 01 Apr 2025 08:02:47 GMT; Max-Age=7200; path=/; httponly; samesite=lax"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"message\": \"Você foi logado com sucesso.\",\n    \"token\": \"4|zQLqJ20JNtJgx7MtchRpjm9TM8o6S2RHpWsFqVYQ2fd68304\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Gabriel\",\n    \"username\": \"gabriel\",\n    \"email\": \"gabriel@local.com\",\n    \"password\": \"12341234\",\n    \"password_confirmation\": \"12341234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}{{auth_uri}}/register",
+							"host": [
+								"{{api_url}}{{auth_uri}}"
+							],
+							"path": [
+								"register"
+							]
+						},
+						"description": "Cria/registra um usuário."
+					},
+					"response": [
+						{
+							"name": "Example",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Gabriel\",\n    \"username\": \"gabriel\",\n    \"email\": \"gabriel@local.com\",\n    \"password\": \"12341234\",\n    \"password_confirmation\": \"12341234\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}{{auth_uri}}/register",
+									"host": [
+										"{{api_url}}{{auth_uri}}"
+									],
+									"path": [
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.4"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.28"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 01 Apr 2025 06:05:08 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:3000"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "XSRF-TOKEN=eyJpdiI6IjdqejhqemRpRXJUZWlmY0ZOVmtpbUE9PSIsInZhbHVlIjoiOGgzTFBNekZJSjNXeXBkaE8yMzM5dmZxSnNaSXV2Q0gwcEFYRCs5OFBhK0VMZ1pFRVhqcGZOUUlRZXZhR2pSak1wRi9jNjhQNDU1U3VnTlBUVFBGZ3FPTVBaZEtNU0RwbU1vSmYwVGhVcUxmbzU5Yk9ScWpjaUV0TFloSnZHdk0iLCJtYWMiOiIzZjc5MDNjNTExNGUxMzY0OWRlZTdjMmVlZjk0MmE5ZGJiYjY3MjUwNDc1MDgxYWMzMmRmYjBlNmQzODhhMWI1IiwidGFnIjoiIn0%3D; expires=Tue, 01 Apr 2025 08:05:08 GMT; Max-Age=7200; path=/; samesite=lax"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "ecommerce_session=eyJpdiI6IlBIR1JBYW82dStSMFBPeTRDR2ZYMkE9PSIsInZhbHVlIjoibkVYSzJ5YVo5dExCclYyMnMzVGJrN3p6ajFXa3hEbWhjL2tnc1NXM0xkeDcvamxZQVIzVWcrc3RwT1IwMTErS0ZPMUJocW5rS1FmVFdhYkRaOWdwWVUveE5iZTk0clhtcFFQZ1FUaVFKbGw2N1NmbFQwR0lJeFYydmEwc2pBRU4iLCJtYWMiOiIxN2JlMWQxYmJhYmQ1YTU5YTRlYjAwMzBjYWQwOWQ3ODhhMTYzNGEzNjE1YWE2ZWU3MjhlZWVlMWFhNDg3ZmVmIiwidGFnIjoiIn0%3D; expires=Tue, 01 Apr 2025 08:05:08 GMT; Max-Age=7200; path=/; httponly; samesite=lax"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"user\": {\n        \"name\": \"Gabriel\",\n        \"username\": \"gabriel\",\n        \"email\": \"gabriel@local.com\",\n        \"updated_at\": \"2025-04-01T06:05:08.000000Z\",\n        \"created_at\": \"2025-04-01T06:05:08.000000Z\",\n        \"id\": 3\n    },\n    \"token\": \"5|5DqKX3nTiKZE826RXxjhgZ5r61uyA9oXs3tCryyG994da4ab\"\n}"
+						}
+					]
+				}
+			],
+			"description": "Todas as requisições relacionadas a autenticação de um usuário."
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"// replace `api_url` and `api_version_uri` with other env variables",
+					"pm.variables.replaceIn('{{api_version_uri}}');",
+					"pm.variables.replaceIn('{{api_url}}');",
+					"",
+					"// send a request to get csrf-token from laravel backend and set token",
+					"const var_xsrf_cookie = \"xsrf-cookie\";",
+					"const env_frontend_url = \"frontend_url\";",
+					"pm.sendRequest({",
+					"    url: `${pm.environment.get(\"api_base_url\")}/sanctum/csrf-cookie`,",
+					"    method: \"GET\"",
+					"}, function (error, response, { cookies }) {",
+					"    if (!error) {",
+					"        pm.collectionVariables.set(var_xsrf_cookie, cookies.get(\"XSRF-TOKEN\"));",
+					"    }",
+					"});",
+					"",
+					"// add required headers to request",
+					"pm.request.addHeader({",
+					"    key: \"X-XSRF-TOKEN\",",
+					"    value: pm.collectionVariables.get(var_xsrf_cookie)",
+					"});",
+					"",
+					"pm.request.addHeader({",
+					"    key: \"Accept\",",
+					"    value: \"application/json\"",
+					"});",
+					"",
+					"pm.request.addHeader({",
+					"    key: \"Origin\",",
+					"    value: pm.environment.get(env_frontend_url)",
+					"});",
+					"",
+					"pm.request.addHeader({",
+					"    key: \"Referer\",",
+					"    value: pm.environment.get(env_frontend_url)",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "xsrf-cookie",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
