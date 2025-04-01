@@ -85,6 +85,7 @@ class Product
             'name' => $this->name,
             'description' => $this->description,
             'price' => $this->price,
+            'category_id' => $this->category->getId(),
             'category' => $cast ? EProductCategory::from($this->category->getName())->toString() : $this->category
         ]);
     }

@@ -20,7 +20,12 @@ class ProductCategory
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'category', cascade: ['persist'], orphanRemoval: true)]
     protected $products;
 
-    public function getName()
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getName(): string
     {
         return $this->name;
     }
@@ -30,7 +35,7 @@ class ProductCategory
         $this->name = $name;
     }
 
-    public function getProducts()
+    public function getProducts(): ArrayCollection|array
     {
         return $this->products;
     }
