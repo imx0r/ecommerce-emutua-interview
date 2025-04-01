@@ -1,8 +1,9 @@
 'use client';
 
 import useSWR from 'swr';
-import Header from "@/app/Header";
 import { useState, useRef } from 'react';
+import { NumericFormat, numericFormatter } from 'react-number-format';
+import Header from "@/app/Header";
 import IconTrash from "@/components/icons/IconTrash";
 import IconEdit from "@/components/icons/IconEdit";
 import InputError from "@/components/InputError";
@@ -70,7 +71,6 @@ export default function Administrar() {
                 Authorization: `Bearer ${token}`
             }
         });
-        console.log(res);
         if (res.status === 201) {
             mutate();
             setIsSuccess(true);
@@ -164,9 +164,9 @@ export default function Administrar() {
                                 <div>
                                     <div>{product.name}</div>
                                     <div
-                                        className="text-xs uppercase font-semibold opacity-60">R${product.price} &middot; {product.category}</div>
+                                        className="text-xs uppercase font-semibold opacity-60">R${numericFormatter(product.price, { decimalScale: 2, thousandSeparator: true })} &middot; {product.category}</div>
                                 </div>
-                                <button className="btn btn-square btn-ghost" onClick={() => openCreateEditModal(product.id)}>
+                                <button className="btn btn-square btn-ghost" onClick={(e) => openCreateEditModal(e, product.id)}>
                                     <IconEdit/>
                                 </button>
                                 <button className="btn btn-square btn-ghost" onClick={() => openTrashModal(product.id)}>
@@ -188,7 +188,7 @@ export default function Administrar() {
                         </>
                     ) : (
                         <>
-                            <h3 className="text-lg font-bold">Alterar Produto</h3>
+                            <h3 className="text-lg font-bold">{ isEditing ? 'Editar' : 'Criar' } Produto</h3>
                             <form className="flex flex-col gap-2.5 py-4">
                                 <label className="floating-label">
                                     <span>Nome do Produto</span>
@@ -219,14 +219,13 @@ export default function Administrar() {
 
                                 <label className="floating-label">
                                     <span>Preço</span>
-                                    <input
-                                        name="price"
-                                        className="input input-bordered w-full"
-                                        type="text"
+                                    <NumericFormat
                                         value={price}
-                                        onChange={(e) => setPrice(e.target.value)}
-                                        placeholder="Preço do produto ..."
-                                        required
+                                        onValueChange={(values) => setPrice(values.value)}
+                                        thousandSeparator={true}
+                                        decimalScale={2}
+                                        fixedDecimalScale={true}
+                                        className="input input-bordered w-full"
                                     />
                                 </label>
                                 <InputError messages={errors.price} className="mt-2"/>
