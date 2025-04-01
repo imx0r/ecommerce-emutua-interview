@@ -3,6 +3,7 @@
 import useSWR from 'swr';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/auth'
+import { numericFormatter } from 'react-number-format';
 import axios from "@/lib/axios";
 import Loading from "@/components/Loading";
 import Navigation from "@/app/Navigation";
@@ -96,7 +97,7 @@ export default function Home() {
                                             <h2 className="card-title">{product.name}</h2>
                                             <p>{product.description}</p>
                                             <div className="flex flex-row justify-between items-baseline">
-                                                <span>R${product.price}</span>
+                                                <span>R${numericFormatter(product.price, { decimalScale: 2, thousandSeparator: true })}</span>
                                                 <div className="card-actions justify-end">
                                                     <button className="btn btn-success btn-sm">Comprar</button>
                                                     <button className="btn btn-neutral btn-sm">
