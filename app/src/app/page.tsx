@@ -6,7 +6,7 @@ import { useAuth } from '@/hooks/auth'
 import axios from "@/lib/axios";
 import Loading from "@/app/(app)/Loading";
 import Navigation from "@/app/Navigation";
-import Header from "@/app/(app)/Header";
+import Header from "@/app/Header";
 
 export default function Home() {
     const { user, isLoading } = useAuth();

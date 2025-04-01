@@ -1,7 +1,7 @@
 'use client';
 
 import useSWR from 'swr';
-import Header from "@/app/(app)/Header";
+import Header from "@/app/Header";
 import { useState, useRef } from 'react';
 import IconTrash from "@/components/icons/IconTrash";
 import IconEdit from "@/components/icons/IconEdit";
