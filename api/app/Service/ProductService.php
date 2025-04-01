@@ -85,10 +85,12 @@ class ProductService extends EntityService
             throw new ProductException(__("product.invalid_data"), HttpResponse::HTTP_NOT_FOUND, null, ['data' => $data]);
         }
 
+        $product_category = $this->em->getRepository(ProductCategory::class)->find($data['category']);
+
         $product->setName($data['name']);
         $product->setDescription($data['description'] ?? $product->getDescription());
         $product->setPrice($data['price'] ?? $product->getPrice());
-        $product->setCategory($data['category'] ?? $product->getCategory());
+        $product->setCategory($product_category ?? $product->getCategory());
         $this->em->flush();
 
         return $product;
