@@ -3,14 +3,15 @@
 import { useAuth } from "@/hooks/auth";
 import Navigation from "@/app/(app)/Navigation";
 import Loading from "@/app/(app)/Loading";
+import { useRouter } from 'next/navigation';
 
 export default function AdminLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const { user } = useAuth({ middleware: 'auth' });
-    if (!user) return (
+    const { user } = useAuth({ middleware: 'auth', role: 'admin' });
+    if (!user || user && user.role < 2) return (
         <Loading />
     );
     

@@ -3,7 +3,7 @@ import axios from '@/lib/axios'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
+export const useAuth = ({ middleware, redirectIfAuthenticated, role } = {}) => {
     const router = useRouter()
 
     const { data: user, error, isLoading, mutate } = useSWR('/auth/me', async () => {
@@ -76,6 +76,9 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     useEffect(() => {
         if (middleware === 'guest' && redirectIfAuthenticated && user)
             router.push(redirectIfAuthenticated)
+        
+        if (middleware === 'auth' && role === 'admin' && user && user.role < 2)
+            router.push('/');
 
         if (middleware === 'auth' && error) logout()
     }, [user, error])
