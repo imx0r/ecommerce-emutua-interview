@@ -47,39 +47,38 @@ export default function LoginPage() {
     );
     
     return (
-        <div className="flex flex-col items-center justify-items-center max-w-xl w-full mx-auto p-5">
-            <h2 className="text-2xl">eMutua Digital e-commerce</h2>
-            <form className="flex flex-col gap-1.5 w-full my-5" onSubmit={handleSubmit}>
-                <label className="floating-label">
-                    <span>Usuário</span>
-                    <input
-                        className="input input-bordered w-full"
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Usuário ..."
-                        required
-                    />
-                </label>
-                <InputError messages={errors.username} className="mt-2" />
-                
-                <label className="floating-label">
-                    <span>Senha</span>
-                    <input
-                        className="input input-bordered w-full"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Senha ..."
-                        required
-                    />
-                </label>
-                <InputError messages={errors.password} className="mt-2" />
-                <button type="submit" className="btn btn-success" disabled={isLoading || isLogging}>Entrar</button>
-                <a href="/" className="btn btn-ghost">Voltar ao Início</a>
+        <form className="flex flex-col gap-2.5 w-full my-5" onSubmit={handleSubmit}>
+            <label className="floating-label">
+                <span>Usuário</span>
+                <input
+                    className="input input-bordered w-full"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Usuário ..."
+                    required
+                />
+            </label>
+            <InputError messages={errors.username} />
+
+            <label className="floating-label">
+                <span>Senha</span>
+                <input
+                    className="input input-bordered w-full"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Senha ..."
+                    required
+                />
+            </label>
+            <InputError messages={errors.password} />
+            <div className="flex flex-col gap-2">
+                <button type="submit" className="btn btn-success text-white" disabled={isLoading || isLogging}>Entrar</button>
                 <div className="divider">ou</div>
                 <a href="/registrar" className="btn btn-neutral">Registrar</a>
-            </form>
-        </div>
+                <a href="/" className="btn btn-ghost">Voltar ao Início</a>
+            </div>
+        </form>
     );
 }
