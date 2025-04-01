@@ -21,6 +21,7 @@ export default function RegisterPage() {
     const [email, setEmail] = useState('');
     const [errors, setErrors] = useState([]);
     const [status, setStatus] = useState(null);
+    const [isCreating, setIsCreating] = useState(false);
 
     useEffect(() => {
         // @ts-ignore
@@ -34,8 +35,11 @@ export default function RegisterPage() {
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
+        setIsCreating(true);
+        
         try {
             await register({ data: { name, username, email, password, password_confirmation: passwordConfirmation }, setErrors, setStatus });
+            setIsCreating(false);
         } catch (error) {
             console.error(`Register failed!`, error);
         }
@@ -46,7 +50,8 @@ export default function RegisterPage() {
     );
 
     return (
-        <div className="flex flex-col items-center justify-items-center max-w-xl w-full mx-auto">
+        <div className="flex flex-col items-center justify-items-center max-w-xl w-full mx-auto p-5">
+            <h2 className="text-2xl">eMutua Digital e-commerce</h2>
             <form className="flex flex-col gap-1.5 w-full my-5" onSubmit={handleSubmit}>
                 <label className="floating-label">
                     <span>Nome</span>
@@ -117,7 +122,7 @@ export default function RegisterPage() {
                     />
                 </label>
                 <InputError messages={errors.password_confirmation} className="mt-2" />
-                <button type="submit" className="btn btn-success" disabled={isLoading}>Registrar</button>
+                <button type="submit" className="btn btn-success" disabled={isLoading || isCreating}>Registrar</button>
                 <a href="/" className="btn btn-ghost">Voltar ao Início</a>
                 <div className="divider">ou</div>
                 <a href="/login" className="btn btn-neutral">Entrar</a>

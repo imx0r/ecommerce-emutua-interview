@@ -6,7 +6,7 @@ export default function Navigation({ user }: Readonly<{ user: any }>) {
     return (
         <div className="navbar bg-base-300 shadow-sm">
             <div className="flex-1">
-                <a className="btn btn-ghost text-xl" href="/">e-commerce</a>
+                <a className="btn btn-ghost text-xl" href="/">eMutua Digital e-commerce</a>
             </div>
             <div className="flex items-baseline gap-2">
                 <div className="flex-none">
@@ -17,7 +17,7 @@ export default function Navigation({ user }: Readonly<{ user: any }>) {
                 </div>
                 <div className="dropdown dropdown-end">
                     <div tabIndex={0} role="button" className="btn btn-neutral">
-                        {user.username}
+                        <span>Olá, {user.username}!</span>
                     </div>
                     <ul
                         tabIndex={0}

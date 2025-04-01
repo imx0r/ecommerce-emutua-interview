@@ -18,6 +18,7 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState([]);
     const [status, setStatus] = useState(null);
+    const [isLogging, setIsLogging] = useState(false);
 
     useEffect(() => {
         // @ts-ignore
@@ -31,8 +32,11 @@ export default function LoginPage() {
     
     const handleSubmit = async (e: any) => {
         e.preventDefault();
+        setIsLogging(true);
+        
         try {
             await login({ username, password, setErrors, setStatus });
+            setIsLogging(false);
         } catch (error) {
             console.error(`Login failed!`, error);
         }
@@ -43,7 +47,8 @@ export default function LoginPage() {
     );
     
     return (
-        <div className="flex flex-col items-center justify-items-center max-w-xl w-full mx-auto">
+        <div className="flex flex-col items-center justify-items-center max-w-xl w-full mx-auto p-5">
+            <h2 className="text-2xl">eMutua Digital e-commerce</h2>
             <form className="flex flex-col gap-1.5 w-full my-5" onSubmit={handleSubmit}>
                 <label className="floating-label">
                     <span>Usuário</span>
@@ -70,7 +75,7 @@ export default function LoginPage() {
                     />
                 </label>
                 <InputError messages={errors.password} className="mt-2" />
-                <button type="submit" className="btn btn-success" disabled={isLoading}>Entrar</button>
+                <button type="submit" className="btn btn-success" disabled={isLoading || isLogging}>Entrar</button>
                 <a href="/" className="btn btn-ghost">Voltar ao Início</a>
                 <div className="divider">ou</div>
                 <a href="/registrar" className="btn btn-neutral">Registrar</a>

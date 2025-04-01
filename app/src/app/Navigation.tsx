@@ -24,13 +24,14 @@ export default function Navigation({ user }: Readonly<{ user: any }>) {
     return (
         <div className="navbar bg-base-300 shadow-sm">
             <div className="flex-1">
-                <a className="btn btn-ghost text-xl" href="/">e-commerce</a>
+                <a className="btn btn-ghost text-xl" href="/">eMutua Digital e-commerce</a>
             </div>
             <div className="flex items-baseline gap-2">
                 {!user ?
                     <div className="flex-none">
                         <ul className="menu menu-horizontal px-1">
                             <li><a href="/login">Entrar</a></li>
+                            <li><a href="/registrar">Registrar</a></li>
                         </ul>
                     </div>
                     :
