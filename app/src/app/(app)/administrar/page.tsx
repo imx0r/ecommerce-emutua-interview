@@ -7,10 +7,9 @@ import IconTrash from "@/components/icons/IconTrash";
 import IconEdit from "@/components/icons/IconEdit";
 import InputError from "@/components/InputError";
 import axios from "@/lib/axios";
-import Toast from "@/components/Toast";
 
 export default function Administrar() {
-    const editModal = useRef<HTMLDialogElement>(null);
+    const createEditModal = useRef<HTMLDialogElement>(null);
     const trashModal = useRef<HTMLDialogElement>(null);
     
     const [id, setId] = useState(0);
@@ -19,7 +18,8 @@ export default function Administrar() {
     const [price, setPrice] = useState('');
     const [category, setCategory] = useState('0');
     const [errors, setErrors] = useState([]);
-    const [doneEditDelete, setDoneEditDelete] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
     
     const { data: products, isLoading, mutate, error } = useSWR('/api/v1/products', async () => {
         return axios.get('/api/v1/products')
@@ -29,17 +29,64 @@ export default function Administrar() {
             })
     });
     
-    const openEditModal = async (id: any) => {
-        if (editModal) {
-            const res = await axios.get(`/api/v1/products/${id}`);
-            if (res.status === 200) {
-                const data = res.data;
-                setId(data.id);
-                setName(data.name);
-                setDescription(data.description);
-                setPrice(data.price);
-                setCategory(data.category_id);
-                editModal?.current?.showModal();
+    const openCreateEditModal = async (e: any, product_id?: any) => {
+        if (createEditModal) {
+            if (product_id) {
+                setIsEditing(true);
+                
+                const res = await axios.get(`/api/v1/products/${product_id}`);
+                if (res.status === 200) {
+                    const data = res.data;
+                    setId(data.id);
+                    setName(data.name);
+                    setDescription(data.description);
+                    setPrice(data.price);
+                    setCategory(data.category_id);
+                }
+            }
+
+            createEditModal?.current?.showModal();
+        }
+    }
+    
+    const createOrEditProduct = async () => {
+        if (id) {
+            return await onSaveProduct();
+        }
+        
+        return await onCreateProduct();
+    }
+    
+    const onCreateProduct = async () => {
+        const token = localStorage.getItem('token');
+        
+        const res = await axios.post(`/api/v1/products`, {
+            name,
+            description,
+            price,
+            category
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        console.log(res);
+        if (res.status === 201) {
+            mutate();
+            setIsSuccess(true);
+            setIsEditing(false);
+            setTimeout(() => {
+                setId(0);
+                setName('');
+                setDescription('');
+                setPrice('');
+                setCategory('0');
+                createEditModal?.current?.close();
+                setIsSuccess(false);
+            }, 2000);
+        } else {
+            if (res.status === 422) {
+                setErrors(res.data.errors)
             }
         }
     }
@@ -59,11 +106,21 @@ export default function Administrar() {
         });
         if (res.status === 200) {
             mutate();
-            setDoneEditDelete(true);
+            setIsSuccess(true);
+            setIsEditing(false);
             setTimeout(() => {
-                editModal?.current?.close();
-                setDoneEditDelete(false);
+                setId(0);
+                setName('');
+                setDescription('');
+                setPrice('');
+                setCategory('0');
+                createEditModal?.current?.close();
+                setIsSuccess(false);
             }, 2000);
+        } else {
+            if (res.status === 422) {
+                setErrors(res.data.errors)
+            }
         }
     }
     
@@ -84,17 +141,17 @@ export default function Administrar() {
         });
         if (res.status === 200) {
             mutate();
-            setDoneEditDelete(true);
+            setIsSuccess(true);
             setTimeout(() => {
                 trashModal?.current?.close();
-                setDoneEditDelete(false);
+                setIsSuccess(false);
             }, 2000);
         }
     }
     
     return (
         <>
-            <Header title="Administrar Produtos"/>
+            <Header title="Administrar Produtos" actions={<><button className="btn btn-neutral" onClick={openCreateEditModal}>Criar Produto</button></>}/>
             <div className="flex flex-col w-full gap-2">
                 {isLoading ? (<span>Carregando produtos ...</span>) : products.map((product: any, i: number) => {
                     return (
@@ -109,7 +166,7 @@ export default function Administrar() {
                                     <div
                                         className="text-xs uppercase font-semibold opacity-60">R${product.price} &middot; {product.category}</div>
                                 </div>
-                                <button className="btn btn-square btn-ghost" onClick={() => openEditModal(product.id)}>
+                                <button className="btn btn-square btn-ghost" onClick={() => openCreateEditModal(product.id)}>
                                     <IconEdit/>
                                 </button>
                                 <button className="btn btn-square btn-ghost" onClick={() => openTrashModal(product.id)}>
@@ -120,14 +177,14 @@ export default function Administrar() {
                     );
                 })}
             </div>
-            <dialog id="product_edit" className="modal" ref={editModal}>
+            <dialog id="product_create_edit" className="modal" ref={createEditModal}>
                 <div className="modal-box">
                     <form method="dialog">
                         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     </form>
-                    { doneEditDelete ? (
+                    { isSuccess ? (
                         <>
-                            <span className="text-xl font-bold text-success">Produto editado com sucesso!</span>
+                            <span className="text-xl font-bold text-success">Produto { isEditing ? 'editado' : 'criado' } com sucesso!</span>
                         </>
                     ) : (
                         <>
@@ -193,7 +250,7 @@ export default function Administrar() {
                                 <InputError messages={errors.category} className="mt-2"/>
                             </form>
                             <div className="modal-action">
-                                <button className="btn btn-success" onClick={onSaveProduct}>Salvar</button>
+                                <button className="btn btn-success" onClick={createOrEditProduct}>Salvar</button>
                                 <form method="dialog">
                                     <button className="btn">Fechar</button>
                                 </form>
@@ -204,7 +261,7 @@ export default function Administrar() {
             </dialog>
             <dialog id="product_edit" className="modal" ref={trashModal}>
                 <div className="modal-box">
-                    {doneEditDelete ? (
+                    {isSuccess ? (
                         <>
                             <span className="text-xl font-bold text-success">Produto removido com sucesso!</span>
                         </>
