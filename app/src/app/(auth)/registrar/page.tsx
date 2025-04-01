@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/auth';
 import { useRouter } from 'next/navigation';
-import Loading from "@/app/(app)/Loading";
+import Loading from "@/components/Loading";
 import InputError from "@/components/InputError";
 
 export default function RegisterPage() {

@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/auth";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Loading from "@/app/(app)/Loading";
+import Loading from "@/components/Loading";
 
 export default function Navigation({ user }: Readonly<{ user: any }>) {
     const { logout } = useAuth();

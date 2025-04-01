@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/hooks/auth";
 import Navigation from "@/app/(app)/Navigation";
-import Loading from "@/app/(app)/Loading";
+import Loading from "@/components/Loading";
 import { useRouter } from 'next/navigation';
 
 export default function AdminLayout({

@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/auth'
 import axios from "@/lib/axios";
-import Loading from "@/app/(app)/Loading";
+import Loading from "@/components/Loading";
 import Navigation from "@/app/Navigation";
 import Header from "@/app/Header";
 
