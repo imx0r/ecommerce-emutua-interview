@@ -1,26 +1,44 @@
 'use client';
 
 import useSWR from 'swr';
-import { useState, useRef } from 'react';
+import { useState, useRef, ChangeEvent } from 'react';
 import { NumericFormat, numericFormatter } from 'react-number-format';
-import Header from "@/app/Header";
+import Header from "@/components/Header";
 import IconTrash from "@/components/icons/IconTrash";
 import IconEdit from "@/components/icons/IconEdit";
 import InputError from "@/components/InputError";
 import axios from "@/lib/axios";
+import Alert from "@/components/Alert";
+import Image from 'next/image';
+import { log } from 'console';
+
+type Errors = {
+    name: string[];
+    description: string[];
+    price: string[];
+    image_url: string[];
+    category: string[];
+    image: string[];
+};
 
 export default function Administrar() {
     const createEditModal = useRef<HTMLDialogElement>(null);
     const trashModal = useRef<HTMLDialogElement>(null);
     
-    const [id, setId] = useState(0);
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [price, setPrice] = useState('');
-    const [category, setCategory] = useState('0');
-    const [errors, setErrors] = useState([]);
-    const [isSuccess, setIsSuccess] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
+    const [id, setId] = useState<number>(0);
+    const [name, setName] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
+    const [price, setPrice] = useState<string>('');
+    const [category, setCategory] = useState<string>('0');
+    const [image, setImage] = useState<string>('');
+    
+    const [errorMessage, setErrorMessage] = useState<string>('');
+    const [errors, setErrors] = useState<Errors|null>(null);
+    const [isSuccess, setIsSuccess] = useState<boolean>(false);
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+    
+    const [file, setFile] = useState<File|null>(null);
+    const [isUploading, setIsUploading] = useState<boolean>(false);
     
     const { data: products, isLoading, mutate, error } = useSWR('/api/v1/products', async () => {
         return axios.get('/api/v1/products')
@@ -43,11 +61,16 @@ export default function Administrar() {
                     setDescription(data.description);
                     setPrice(data.price);
                     setCategory(data.category_id);
+                    setImage(data.image_url);
                 }
             }
 
             createEditModal?.current?.showModal();
         }
+    }
+    
+    const closeCreateEditModal = () => {
+        resetStateToDefault();
     }
     
     const createOrEditProduct = async () => {
@@ -61,27 +84,49 @@ export default function Administrar() {
     const onCreateProduct = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.post(`/api/v1/products`, {
-                name,
-                description,
-                price,
-                category
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            if (res.status === 201) {
+            axios.post(`/api/v1/products`, { name, description, price, category, image_url: image }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                .then(res => res.data)
+                .then(_ => {
+                    mutate();
+                    setIsSuccess(true);
+                    setIsEditing(false);
+                    setErrors(null);
+                    setTimeout(() => {
+                        resetStateToDefault();
+                        createEditModal?.current?.close();
+                        setIsSuccess(false);
+                    }, 2000);
+                })
+                .catch(error => {
+                    if (error.status === 400) {
+                        setErrorMessage(error.response.data.message);
+                    } else {
+                        setErrors(error.response.data.errors);
+                    }
+                });
+        } catch (e: any) {
+            setErrors(e.response.data.errors)
+        }
+    }
+    
+    const onSaveProduct = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const res = await axios
+                .put(`/api/v1/products/${id}`, { name, description, price, category }, { 
+                    headers: { Authorization: `Bearer ${token}`}
+                });
+            if (res.status === 200) {
                 mutate();
                 setIsSuccess(true);
                 setIsEditing(false);
-                setErrors([]);
+                setErrors(null);
                 setTimeout(() => {
-                    setId(0);
-                    setName('');
-                    setDescription('');
-                    setPrice('');
-                    setCategory('0');
+                    resetStateToDefault();
                     createEditModal?.current?.close();
                     setIsSuccess(false);
                 }, 2000);
@@ -91,36 +136,27 @@ export default function Administrar() {
         }
     }
     
-    const onSaveProduct = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const res = await axios.put(`/api/v1/products/${id}`, {
-                name,
-                description,
-                price,
-                category
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+    const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (files) {
+            const file: File = files[0];
+
+            setIsUploading(true);
+            
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const request = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
             });
-            if (res.status === 200) {
-                mutate();
-                setIsSuccess(true);
-                setIsEditing(false);
-                setErrors([]);
-                setTimeout(() => {
-                    setId(0);
-                    setName('');
-                    setDescription('');
-                    setPrice('');
-                    setCategory('0');
-                    createEditModal?.current?.close();
-                    setIsSuccess(false);
-                }, 2000);
+            if (request.status === 200) {
+                const response = await request.json();
+                console.log(response);
+
+                setImage(response.url);
+                setIsUploading(false);
             }
-        } catch (e: any) {
-            setErrors(e.response.data.errors)
         }
     }
     
@@ -142,7 +178,7 @@ export default function Administrar() {
             if (res.status === 200) {
                 mutate();
                 setIsSuccess(true);
-                setErrors([]);
+                setErrors(null);
                 setTimeout(() => {
                     trashModal?.current?.close();
                     setId(0);
@@ -152,6 +188,15 @@ export default function Administrar() {
         } catch (e: any) {
             setErrors(e.response.data.errors);
         }
+    }
+    
+    const resetStateToDefault = () => {
+        setId(0);
+        setName('');
+        setDescription('');
+        setPrice('');
+        setCategory('0');
+        setImage('');
     }
     
     return (
@@ -187,7 +232,7 @@ export default function Administrar() {
             <dialog id="product_create_edit" className="modal" ref={createEditModal}>
                 <div className="modal-box">
                     <form method="dialog">
-                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={closeCreateEditModal}>✕</button>
                     </form>
                     { isSuccess ? (
                         <>
@@ -197,69 +242,87 @@ export default function Administrar() {
                         <>
                             <h3 className="text-lg font-bold">{ isEditing ? 'Editar' : 'Criar' } Produto</h3>
                             <form className="flex flex-col py-4">
-                                <label className="floating-label">
-                                    <span>Nome do Produto</span>
-                                    <input
-                                        name="name"
-                                        className="input input-bordered w-full"
-                                        type="text"
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                        placeholder="Nome do produto ..."
-                                        required
-                                    />
-                                </label>
-                                <InputError messages={errors.name} className="mt-2"/>
+                                { errorMessage && <Alert text={errorMessage} type="error" classes="mb-3" /> }
+                                <div className="flex flex-col">
+                                    { image && <Image src={image} alt="Imagem do Produto" width="400" height="400" />}
+                                    <fieldset className="fieldset">
+                                        <legend className="fieldset-legend">Escolha uma imagem</legend>
+                                        <input type="file" className="file-input w-full" onChange={handleFileChange} disabled={isUploading} />
+                                        <label className="fieldset-label">Tamanho máximo: 2MB</label>
+                                    </fieldset>
+                                    <InputError messages={errors?.image} className="mt-2"/>
+                                </div>
+                                <div className="flex flex-col">
+                                    <label className="floating-label">
+                                        <span>Nome do Produto</span>
+                                        <input
+                                            name="name"
+                                            className="input input-bordered w-full"
+                                            type="text"
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                            placeholder="Nome do produto ..."
+                                            required
+                                        />
+                                    </label>
+                                    <InputError messages={errors?.name} className="mt-1"/>
+                                </div>
 
-                                <label className="floating-label mt-3">
-                                    <span>Descrição do Produto</span>
-                                    <textarea
-                                        name="description"
-                                        className="textarea w-full"
-                                        value={description}
-                                        onChange={(e) => setDescription(e.target.value)}
-                                        placeholder="Descrição do produto ..."
-                                        required
-                                    />
-                                </label>
-                                <InputError messages={errors.description} className="mt-2"/>
+                                <div className="flex flex-col">
+                                    <label className="floating-label mt-3">
+                                        <span>Descrição do Produto</span>
+                                        <textarea
+                                            name="description"
+                                            className="textarea w-full"
+                                            value={description}
+                                            onChange={(e) => setDescription(e.target.value)}
+                                            placeholder="Descrição do produto ..."
+                                            required
+                                        />
+                                    </label>
+                                    <InputError messages={errors?.description} className="mt-1"/>
+                                </div>
 
-                                <label className="floating-label mt-3">
-                                    <span>Preço</span>
-                                    <NumericFormat
-                                        className="input input-bordered w-full"
-                                        value={price}
-                                        onValueChange={(values) => setPrice(values.value)}
-                                        thousandSeparator={true}
-                                        decimalScale={2}
-                                        fixedDecimalScale={true}
-                                        placeholder="Preço ..."
-                                    />
-                                </label>
-                                <InputError messages={errors.price} className="mt-2"/>
+                                <div className="flex flex-col">
+                                    <label className="floating-label mt-3">
+                                        <span>Preço</span>
+                                        <NumericFormat
+                                            className="input input-bordered w-full"
+                                            value={price}
+                                            onValueChange={(values) => setPrice(values.value)}
+                                            thousandSeparator={true}
+                                            decimalScale={2}
+                                            fixedDecimalScale={true}
+                                            placeholder="Preço ..."
+                                        />
+                                    </label>
+                                    <InputError messages={errors?.price} className="mt-1"/>
+                                </div>
 
-                                <label className="floating-label mt-3">
-                                    <span>Categoria</span>
-                                    <select
-                                        name="category"
-                                        className="input input-bordered w-full"
-                                        onChange={(e) => setCategory(e.target.value)}
-                                        value={category}
-                                        required>
-                                        <option value="0" disabled>Selecione uma categoria</option>
-                                        <option value="1">Genérico</option>
-                                        <option value="2">Mobília</option>
-                                        <option value="3">Eletrônico</option>
-                                        <option value="4">Saúde</option>
-                                        <option value="5">Roupa</option>
-                                    </select>
-                                </label>
-                                <InputError messages={errors.category} className="mt-2"/>
+                                <div className="flex flex-col">
+                                    <label className="floating-label mt-3">
+                                        <span>Categoria</span>
+                                        <select
+                                            name="category"
+                                            className="input input-bordered w-full"
+                                            onChange={(e) => setCategory(e.target.value)}
+                                            value={category}
+                                            required>
+                                            <option value="0" disabled>Selecione uma categoria</option>
+                                            <option value="1">Cosméticos</option>
+                                            <option value="2">Acessórios</option>
+                                            <option value="3">Eletrônico</option>
+                                            <option value="4">Saúde</option>
+                                            <option value="5">Roupa</option>
+                                        </select>
+                                    </label>
+                                    <InputError messages={errors?.category} className="mt-1"/>
+                                </div>
                             </form>
                             <div className="modal-action">
-                                <button className="btn btn-success" onClick={createOrEditProduct}>{isEditing ? 'Salvar' : 'Criar'}</button>
+                                <button className="btn btn-success" onClick={createOrEditProduct} disabled={isUploading}>{isEditing ? 'Salvar' : 'Criar'}</button>
                                 <form method="dialog">
-                                    <button className="btn">Fechar</button>
+                                    <button className="btn" onClick={closeCreateEditModal}>Fechar</button>
                                 </form>
                             </div>
                         </>

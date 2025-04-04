@@ -22,5 +22,6 @@ Route::prefix("v1")->group(function () {
         Route::get('/{product}', [ProductController::class, 'show'])->whereNumber('product');
         Route::put('/{product}', [ProductController::class, 'update'])->whereNumber('product');
         Route::delete('/{product}', [ProductController::class, 'destroy'])->whereNumber('product');
+        Route::post('/upload-image', [ProductController::class, 'uploadImage']);
     });
 });

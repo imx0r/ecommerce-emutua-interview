@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
         // Não utilizo o factory aqui, pois quero criar dois usuários padrões e não vários aleatórios
         DB::table('users')->insert([
             [
-                'name' => 'Administrator',
+                'name' => __("seed.users.admin.name"),
                 'username' => 'admin',
                 'email' => 'admin@admin.com',
                 'password' => Hash::make('p@ass'),
@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
                 'created_at' => now()
             ],
             [
-                'name' => 'User',
+                'name' => __("seed.users.user.name"),
                 'username' => 'user',
                 'email' => 'user@user.com',
                 'password' => Hash::make('password'),

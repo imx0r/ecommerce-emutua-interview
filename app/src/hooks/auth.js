@@ -39,22 +39,21 @@ export const useAuth = ({ middleware, redirectIfAuthenticated, role } = {}) => {
             })
     }
 
-    const login = async ({ setErrors, setStatus, ...props }) => {
-        await csrf()
-
-        setErrors([])
-        setStatus(null)
-
+    const login = async ({ setErrors, ...props }) => {
+        await csrf();
+        setErrors([]);
+        
         axios
             .post('/api/v1/auth/login', props)
             .then((res) => {
                 localStorage.setItem('token', res.data.token);
                 mutate();
+                router.push('/');
             })
             .catch(error => {
                 if (error.response.status !== 422) throw error
-                setErrors(error.response.data.errors)
-            })
+                setErrors(error.response.data.errors);
+            });
     }
 
     const logout = async () => {

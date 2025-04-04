@@ -7,7 +7,7 @@ import { numericFormatter } from 'react-number-format';
 import axios from "@/lib/axios";
 import Loading from "@/components/Loading";
 import Navigation from "@/app/Navigation";
-import Header from "@/app/Header";
+import Header from "@/components/Header";
 
 export default function Home() {
     const { user, isLoading } = useAuth();
@@ -91,7 +91,7 @@ export default function Home() {
                                     <div className="card bg-base-200 w-82 shadow-sm">
                                         <figure>
                                             <img alt="produto"
-                                                 src="https://placehold.co/600x400/webp?text=Imagem+Produto"/>
+                                                 src={product.image_url}/>
                                         </figure>
                                         <div className="card-body">
                                             <h2 className="card-title">{product.name}</h2>

@@ -24,6 +24,9 @@ class Product
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
     protected string $price;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    protected string $imageUrl;
+
     #[ORM\ManyToOne(targetEntity: ProductCategory::class, fetch: 'EAGER', inversedBy: 'products')]
     protected ProductCategory $category;
 
@@ -68,6 +71,16 @@ class Product
         $this->price = $price;
     }
 
+    public function getImageUrl()
+    {
+        return $this->imageUrl;
+    }
+
+    public function setImageUrl($imageUrl): void
+    {
+        $this->imageUrl = $imageUrl;
+    }
+
     public function getCategory(): ProductCategory
     {
         return $this->category;
@@ -85,6 +98,7 @@ class Product
             'name' => $this->name,
             'description' => $this->description,
             'price' => $this->price,
+            'image_url' => $this->imageUrl,
             'category_id' => $this->category->getId(),
             'category' => $cast ? EProductCategory::from($this->category->getName())->toString() : $this->category
         ]);

@@ -6,6 +6,7 @@ use App\Enums\EResponseStatus;
 use App\Exceptions\ProductException;
 use App\Http\Requests\CreateOrUpdateProductRequest;
 use App\Http\Requests\DeleteProductRequest;
+use App\Http\Requests\UploadImageRequest;
 use App\Service\OpenSearchService;
 use App\Service\ProductService;
 use Illuminate\Http\Request;
@@ -27,17 +28,14 @@ class ProductController extends Controller
 
     public function index(Request $request): \Illuminate\Http\JsonResponse
     {
-        $products = Cache::remember(config('cache.keys.product.products.key'), config('cache.keys.product.products.ttl'), function () {
-            return $this->products->all();
-        });
-        return response()->json($products, HttpResponse::HTTP_OK);
+        return response()->json($this->products->all(), HttpResponse::HTTP_OK);
     }
 
     public function show(Request $request, int $id): \Illuminate\Http\JsonResponse
     {
         try {
             $product = Cache::remember(Str::replace(':id', $id, config('cache.keys.product.product.key')), config('cache.keys.product.product.ttl'), function () use ($id) {
-                return $this->products->byId($id);
+                    return $this->products->byId($id);
             });
             return response()->json($product->toArray(), HttpResponse::HTTP_OK);
         } catch (ProductException $e) {
@@ -64,7 +62,7 @@ class ProductController extends Controller
             }
             return response()->json($product->toArray(), HttpResponse::HTTP_CREATED);
         } catch (ProductException $e) {
-            return response()->json(["status" => EResponseStatus::FAILED, "message" => $e->getMessage()], HttpResponse::HTTP_BAD_REQUEST);
+            return response()->json(["status" => EResponseStatus::FAILED, "message" => $e->getMessage()], $e->getCode());
         }
     }
 
@@ -95,7 +93,7 @@ class ProductController extends Controller
             $product = $this->products->byId($id);
             $this->products->deleteProduct($product);
 
-            if ($this->openSearchService->exists($id)) {
+            if ($this->openSearchService->productExists($id)) {
                 $this->openSearchService->removeProduct($id);
             }
 
@@ -103,6 +101,22 @@ class ProductController extends Controller
         } catch (ProductException $e) {
             return response()->json(["status" => EResponseStatus::FAILED, "message" => $e->getMessage()], HttpResponse::HTTP_BAD_REQUEST);
         }
+    }
+
+    public function uploadImage(UploadImageRequest $request): \Illuminate\Http\JsonResponse
+    {
+        $path = $request->file('image')->store('uploads', 'public');
+        if ($path) {
+            return response()->json([
+                "status" => EResponseStatus::SUCCESS,
+                "status_code" => HttpResponse::HTTP_CREATED,
+                "message" => __("product.upload.success"),
+                "path" => $path,
+                "url" => asset("storage/{$path}")
+            ], HttpResponse::HTTP_CREATED);
+        }
+
+        return response()->json(["status" => EResponseStatus::FAILED, "status_code" => HttpResponse::HTTP_INTERNAL_SERVER_ERROR, "message" => __("product.upload.failed")], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     private function userIsAdministrator(): bool

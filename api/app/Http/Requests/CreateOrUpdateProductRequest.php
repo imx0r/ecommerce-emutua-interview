@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 
 class CreateOrUpdateProductRequest extends FormRequest
@@ -22,25 +23,16 @@ class CreateOrUpdateProductRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => [
-                Rule::requiredIf($this->method() == 'POST'),
-                'string',
-                'max:255',
-            ],
-            'description' => [
-                Rule::requiredIf($this->method() == 'POST'),
-                'string',
-                'max:255'
-            ],
-            'price' => [
-                Rule::requiredIf($this->method() == 'POST'),
-                'numeric'
-            ],
-            'category' => [
-                Rule::requiredIf($this->method() == 'POST'),
-                'exists:product_categories,id'
-            ],
-        ];
+        return collect([
+            'name' => ['string', 'max:255'],
+            'description' => ['string', 'max:255'],
+            'price' => ['numeric'],
+            'image_url' => ['string'],
+            'category' => ['exists:product_categories,id'],
+        ])->when($this->isMethod('POST'), function ($collection) {
+            return $collection->mapWithKeys(function ($rules, $field) {
+                return [$field => array_merge(['required'], $rules)];
+            });
+        })->all();
     }
 }

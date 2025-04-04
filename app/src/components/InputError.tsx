@@ -1,6 +1,6 @@
-const InputError = ({ messages = [], className = '' }) => (
+const InputError = ({ messages = [], className = '' }: { messages?: string[], className?: string }) => (
     <>
-        {messages.length > 0 && (
+        {messages && messages.length > 0 && (
             <>
                 {messages.map((message, index) => (
                     <p

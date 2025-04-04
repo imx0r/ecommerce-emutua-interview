@@ -17,8 +17,8 @@ return [
         'forbidden' => 'Você não tem permissão para atualizar um produto.',
     ],
     'category' => [
-        'generic' => 'Genéricos',
-        'furniture' => 'Mobília',
+        'cosmetic' => 'Cosméticos',
+        'accessory' => 'Acessórios',
         'electronic' => 'Eletrônicos',
         'health' => 'Saúde',
         'clothing' => 'Roupas',
@@ -26,5 +26,9 @@ return [
     'invalid_product' => 'Produto não existe ou é inválido.',
     'not_found' => 'Produto não encontrado.',
     'invalid_data' => 'Informações do produto são inválidas.',
-    'category_not_found' => 'A categoria do produto não foi encontrada.'
+    'category_not_found' => 'A categoria do produto não foi encontrada.',
+    'upload' => [
+        'success' => 'Imagem do produto foi enviada com sucesso.',
+        'failed' => 'Falha ao enviar imagem do produto.',
+    ]
 ];

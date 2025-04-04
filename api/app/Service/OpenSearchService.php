@@ -4,19 +4,19 @@ namespace App\Service;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use OpenSearch\ClientBuilder;
+use OpenSearch\Client;
+use OpenSearch\GuzzleClientFactory;
 
 class OpenSearchService
 {
-    protected \OpenSearch\Client $client;
+    protected Client $client;
 
     public function __construct()
     {
-        $hosts = Str::of(config('services.opensearch.hosts'));
-        $this->client = ClientBuilder::create()
-            ->setHosts($hosts->contains(',') ? $hosts->split(',') : [$hosts->value()])
-            ->setSSLVerification(config('services.opensearch.verify_ssl', false))
-            ->build();
+        $this->client = (new GuzzleClientFactory())->create([
+            'base_uri' => config('services.opensearch.hosts', 'http://opensearch:9200'),
+            'verify' => config('services.opensearch.verify_ssl', false),
+        ]);
     }
 
     public function indexProduct(array $product): Collection
@@ -39,7 +39,7 @@ class OpenSearchService
         return Collection::make($this->client->delete($params));
     }
 
-    public function searchById($id): Collection
+    public function searchProductById($id): Collection
     {
         $params = [
             'index' => 'products',
@@ -77,8 +77,8 @@ class OpenSearchService
         return Collection::make($this->client->search($params));
     }
 
-    public function exists($id): bool
+    public function productExists($id): bool
     {
-        return $this->searchById($id)->dot()->get('hits.total.value') > 0;
+        return $this->searchProductById($id)->dot()->get('hits.total.value') > 0;
     }
 }

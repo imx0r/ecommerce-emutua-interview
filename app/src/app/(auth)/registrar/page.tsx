@@ -6,6 +6,15 @@ import { useRouter } from 'next/navigation';
 import Loading from "@/components/Loading";
 import InputError from "@/components/InputError";
 
+interface Errors {
+    name: string[];
+    username: string[];
+    password: string[];
+    password_confirmation: string[];
+    email: string[];
+    alert: string[];
+}
+
 export default function RegisterPage() {
     const router = useRouter();
 
@@ -19,29 +28,19 @@ export default function RegisterPage() {
     const [password, setPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
     const [email, setEmail] = useState('');
-    const [errors, setErrors] = useState([]);
-    const [status, setStatus] = useState(null);
+    const [errors, setErrors] = useState<Errors|null>(null);
     const [isCreating, setIsCreating] = useState(false);
-
-    useEffect(() => {
-        // @ts-ignore
-        if (router.reset?.length > 0 && errors.length === 0) {
-            // @ts-ignore
-            setStatus(atob(router.reset))
-        } else {
-            setStatus(null)
-        }
-    })
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         setIsCreating(true);
         
         try {
-            await register({ data: { name, username, email, password, password_confirmation: passwordConfirmation }, setErrors, setStatus });
+            await register({ data: { name, username, email, password, password_confirmation: passwordConfirmation }, setErrors });
             setIsCreating(false);
         } catch (error) {
             console.error(`Register failed!`, error);
+            setIsCreating(false);
         }
     }
 
@@ -63,7 +62,7 @@ export default function RegisterPage() {
                     required
                 />
             </label>
-            <InputError messages={errors.name} />
+            <InputError messages={errors?.name} />
 
             <label className="floating-label">
                 <span>Usuário</span>
@@ -77,7 +76,7 @@ export default function RegisterPage() {
                     required
                 />
             </label>
-            <InputError messages={errors.username} />
+            <InputError messages={errors?.username} />
 
             <label className="floating-label">
                 <span>E-mail</span>
@@ -91,7 +90,7 @@ export default function RegisterPage() {
                     required
                 />
             </label>
-            <InputError messages={errors.email} />
+            <InputError messages={errors?.email} />
 
             <label className="floating-label">
                 <span>Senha</span>
@@ -105,7 +104,7 @@ export default function RegisterPage() {
                     required
                 />
             </label>
-            <InputError messages={errors.password} />
+            <InputError messages={errors?.password} />
 
             <label className="floating-label">
                 <span>Confirme a senha</span>
@@ -119,9 +118,9 @@ export default function RegisterPage() {
                     required
                 />
             </label>
-            <InputError messages={errors.password_confirmation} />
+            <InputError messages={errors?.password_confirmation} />
             <div className="flex flex-col gap-2">
-                <button type="submit" className="btn btn-success" disabled={isLoading || isCreating}>Registrar</button>
+                <button type="submit" className="btn btn-success" disabled={isLoading || isCreating}>{ isCreating ? 'Criando sua conta ...' : 'Registrar'}</button>
                 <div className="divider">ou</div>
                 <a href="/login" className="btn btn-neutral">Entrar</a>
                 <a href="/" className="btn btn-ghost">Voltar ao Início</a>

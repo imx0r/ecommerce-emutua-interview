@@ -1,6 +1,7 @@
 import { useAuth } from "@/hooks/auth";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Loading from "@/components/Loading";
 
 export default function Navigation({ user }: Readonly<{ user: any }>) {
@@ -30,8 +31,8 @@ export default function Navigation({ user }: Readonly<{ user: any }>) {
                 {!user ?
                     <div className="flex-none">
                         <ul className="menu menu-horizontal px-1">
-                            <li><a href="/login">Entrar</a></li>
-                            <li><a href="/registrar">Registrar</a></li>
+                            <li><Link href="/login">Entrar</Link></li>
+                            <li><Link href="/registrar">Registrar</Link></li>
                         </ul>
                     </div>
                     :
@@ -44,7 +45,7 @@ export default function Navigation({ user }: Readonly<{ user: any }>) {
                                 <ul
                                     tabIndex={0}
                                     className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-                                    <li><a href="/administrar">Produtos</a></li>
+                                    <li><Link href="/administrar">Produtos</Link></li>
                                 </ul>
                             </div>
                         ) }

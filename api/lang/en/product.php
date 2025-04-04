@@ -17,8 +17,8 @@ return [
         'forbidden' => 'You do not have permission to update product.',
     ],
     'category' => [
-        'generic' => 'Generic',
-        'furniture' => 'Furniture',
+        'cosmetic' => 'Cosmetic',
+        'accessory' => 'Accessory',
         'electronic' => 'Electronics',
         'health' => 'Health',
         'clothing' => 'Clothing',
@@ -27,4 +27,8 @@ return [
     'not_found' => 'Product not found.',
     'invalid_data' => 'Invalid Product data.',
     'category_not_found' => 'Product category could not be found.',
+    'upload' => [
+        'success' => 'Product image has been uploaded.',
+        'failed' => 'Failed to upload the product image.',
+    ]
 ];

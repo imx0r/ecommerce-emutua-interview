@@ -1,4 +1,5 @@
 import { useAuth } from "@/hooks/auth";
+import Link from 'next/link';
 
 export default function Navigation({ user }: Readonly<{ user: any }>) {
     const { logout } = useAuth();
@@ -11,8 +12,8 @@ export default function Navigation({ user }: Readonly<{ user: any }>) {
             <div className="flex items-baseline gap-2">
                 <div className="flex-none">
                     <ul className="menu menu-horizontal px-1">
-                        <li><a href="/">Voltar para Início</a></li>
-                        <li><a href="/administrar">Administrar</a></li>
+                        <li><Link href="/">Voltar para Início</Link></li>
+                        <li><Link href="/administrar">Administrar</Link></li>
                     </ul>
                 </div>
                 <div className="dropdown dropdown-end">

@@ -8,6 +8,8 @@ use App\Exceptions\ProductException;
 use App\Repositories\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class ProductService extends EntityService
@@ -23,7 +25,9 @@ class ProductService extends EntityService
 
     public function all(): Collection
     {
-        return $this->toData($this->repository->findAll());
+        return Cache::remember(config('cache.keys.product.products.key'), config('cache.keys.product.products.ttl'), function () {
+            return $this->toData($this->repository->findAll());
+        });
     }
 
     /**
@@ -58,7 +62,7 @@ class ProductService extends EntityService
     public function createProduct(array $data): Product|null
     {
         if (!$data) {
-            throw new ProductException(__("product.invalid_data"), HttpResponse::HTTP_NOT_FOUND, null, ['data' => $data]);
+            throw new ProductException(__("product.invalid_data"), HttpResponse::HTTP_BAD_REQUEST, null, ['data' => $data]);
         }
 
         $product_category = $this->em->getRepository(ProductCategory::class)->find($data['category']);
@@ -69,6 +73,7 @@ class ProductService extends EntityService
         $product = new Product($data['name']);
         $product->setDescription($data['description']);
         $product->setPrice($data['price']);
+        $product->setImageUrl($data['image_url']);
         $product->setCategory($product_category);
         $this->em->persist($product);
         $this->em->flush();
@@ -90,6 +95,7 @@ class ProductService extends EntityService
         $product->setName($data['name']);
         $product->setDescription($data['description'] ?? $product->getDescription());
         $product->setPrice($data['price'] ?? $product->getPrice());
+        $product->setImageUrl($data['image_url'] ?? $product->getImageUrl());
         $product->setCategory($product_category ?? $product->getCategory());
         $this->em->flush();
 

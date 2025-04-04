@@ -20,6 +20,7 @@ class ProductSeeder extends Seeder
                 'name' => ucfirst(fake()->word()),
                 'description' => fake()->text(),
                 'price' => fake()->numberBetween(100, 1000),
+                'image_url' => "https://placehold.co/600x400/webp?text=Image",
                 'category_id' => $category_id,
             ]);
         }

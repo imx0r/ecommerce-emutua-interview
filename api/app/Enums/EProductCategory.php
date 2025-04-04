@@ -4,8 +4,8 @@ namespace App\Enums;
 
 enum EProductCategory : string
 {
-    case GENERIC = 'generic';
-    case FURNITURE = 'furniture';
+    case COSMETIC = 'cosmetic';
+    case ACCESSORY = 'accessory';
     case ELECTRONIC = 'electronic';
     case HEALTH = 'health';
     case CLOTHING = 'clothing';
@@ -13,8 +13,8 @@ enum EProductCategory : string
     public function toString() : string
     {
         return match ($this) {
-            self::GENERIC => __('product.category.generic'),
-            self::FURNITURE => __('product.category.furniture'),
+            self::COSMETIC => __('product.category.cosmetic'),
+            self::ACCESSORY => __('product.category.accessory'),
             self::ELECTRONIC => __('product.category.electronic'),
             self::HEALTH => __('product.category.health'),
             self::CLOTHING => __('product.category.clothing'),
