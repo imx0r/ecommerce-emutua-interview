@@ -5,9 +5,8 @@ import "./globals.css";
 const fontInter = Inter({
     subsets: ["latin"]
 });
-
 export const metadata: Metadata = {
-  title: "eMutua e-commerce"
+  title: "eMutua Digital e-commerce"
 };
 
 export default function RootLayout({
