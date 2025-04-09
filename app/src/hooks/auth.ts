@@ -2,11 +2,17 @@ import useSWR from 'swr'
 import axios from '@/lib/axios'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { LoginFormData, RegisterFormData, User } from '@/types';
 
-export const useAuth = ({ middleware, redirectIfAuthenticated, role } = {}) => {
+type AuthRole = 'admin' | 'user' | 'guest';
+type MiddlewareType = 'guest' | 'auth' | null;
+
+export const useAuth = ({ middleware, redirectIfAuthenticated, role }: 
+    { middleware?: MiddlewareType, redirectIfAuthenticated?: string, role?: AuthRole } = { middleware: 'guest', role: 'guest' }
+) => {
     const router = useRouter()
 
-    const { data: user, error, isLoading, mutate } = useSWR('/auth/me', async () => {
+    const { data: user, error, isLoading, mutate } = useSWR<User>('/auth/me', async () => {
         const token = localStorage.getItem('token');
         if (token) {
             return axios
@@ -20,15 +26,15 @@ export const useAuth = ({ middleware, redirectIfAuthenticated, role } = {}) => {
         }
     });
 
-    const csrf = () => axios.get('/sanctum/csrf-cookie')
+    const csrf = () => axios.get('/sanctum/csrf-cookie');
 
-    const register = async ({ setErrors, ...props }) => {
+    const register = async ({ data, setErrors }: { setErrors: any, data: RegisterFormData }) => {
         await csrf()
 
         setErrors([])
 
         axios
-            .post('/api/v1/auth/register', props.data)
+            .post('/api/v1/auth/register', { data: data })
             .then((res) => {
                 localStorage.setItem('token', res.data.token)
                 mutate()
@@ -39,12 +45,12 @@ export const useAuth = ({ middleware, redirectIfAuthenticated, role } = {}) => {
             })
     }
 
-    const login = async ({ setErrors, ...props }) => {
+    const login = async ({ data, setErrors }: { data: LoginFormData, setErrors: any }) => {
         await csrf();
         setErrors([]);
         
         axios
-            .post('/api/v1/auth/login', props)
+            .post('/api/v1/auth/login', data)
             .then((res) => {
                 localStorage.setItem('token', res.data.token);
                 mutate();
