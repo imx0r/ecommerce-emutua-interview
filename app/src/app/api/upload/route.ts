@@ -1,27 +1,17 @@
 import { pinata } from "@/lib/pinata";
-import { log } from "console";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
     try {
         const data = await request.formData();
-        const file: File|null = data.get('file') as unknown as File;
-
-        // const url = await pinata.upload.public.createSignedURL({ expires: 300 });
-        const upload = await pinata.upload.public.file(file);
+        const upload = await pinata.upload.public.file(data.get('file') as File);
         const url = await pinata.gateways.public.convert(upload.cid);
 
-        return NextResponse.json({
-            message: "Uploaded successfully",
-            url: url
-        }, { status: 200 })
+        return NextResponse.json({ url: url }, { status: 200 })
     } catch (e) {
-        console.log(e);
-        
+        console.error(`An error occurred when trying to upload file to Pinata`, e);
         return NextResponse.json({
             message: "Something went wrong"
-        }, {
-            status: 500
-        })
+        }, { status: 500 })
     }
 }
