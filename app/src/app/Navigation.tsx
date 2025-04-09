@@ -1,12 +1,11 @@
 import { useAuth } from "@/hooks/auth";
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { User } from "@/types";
 import Link from 'next/link';
 import Loading from "@/components/Loading";
 
-export default function Navigation({ user }: Readonly<{ user: any }>) {
+export default function Navigation({ user }: Readonly<{ user: User|undefined }>) {
     const { logout } = useAuth();
-    const router = useRouter();
     
     const [loggingOut, setLoggingOut] = useState(false);
     

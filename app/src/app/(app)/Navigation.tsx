@@ -1,7 +1,8 @@
 import { useAuth } from "@/hooks/auth";
+import { User } from "@/types";
 import Link from 'next/link';
 
-export default function Navigation({ user }: Readonly<{ user: any }>) {
+export default function Navigation({ user }: Readonly<{ user: User }>) {
     const { logout } = useAuth();
     
     return (
@@ -13,7 +14,6 @@ export default function Navigation({ user }: Readonly<{ user: any }>) {
                 <div className="flex-none">
                     <ul className="menu menu-horizontal px-1">
                         <li><Link href="/">Voltar para Início</Link></li>
-                        <li><Link href="/administrar">Administrar</Link></li>
                     </ul>
                 </div>
                 <div className="dropdown dropdown-end">
