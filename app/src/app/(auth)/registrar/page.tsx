@@ -1,23 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/hooks/auth';
-import { useRouter } from 'next/navigation';
+import { RegisterInputErrors } from '@/types';
 import Loading from "@/components/Loading";
 import InputError from "@/components/InputError";
 
-interface Errors {
-    name: string[];
-    username: string[];
-    password: string[];
-    password_confirmation: string[];
-    email: string[];
-    alert: string[];
-}
-
 export default function RegisterPage() {
-    const router = useRouter();
-
     const { register, isLoading } = useAuth({
         middleware: 'guest',
         redirectIfAuthenticated: '/'
@@ -28,7 +17,7 @@ export default function RegisterPage() {
     const [password, setPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
     const [email, setEmail] = useState('');
-    const [errors, setErrors] = useState<Errors|null>(null);
+    const [errors, setErrors] = useState<RegisterInputErrors|null>(null);
     const [isCreating, setIsCreating] = useState(false);
 
     const handleSubmit = async (e: any) => {

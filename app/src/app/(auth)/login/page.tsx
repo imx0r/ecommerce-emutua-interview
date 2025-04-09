@@ -2,15 +2,10 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/hooks/auth';
+import { LoginInputErrors } from '@/types';
 import Loading from "@/components/Loading";
 import InputError from "@/components/InputError";
 import Alert from "@/components/Alert";
-
-interface Errors {
-    username: string[];
-    password: string[];
-    alert: string[];
-}
 
 export default function LoginPage() {
     const { login, isLoading } = useAuth({
@@ -20,7 +15,7 @@ export default function LoginPage() {
     
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [errors, setErrors] = useState<Errors|null>();
+    const [errors, setErrors] = useState<LoginInputErrors|null>();
     const [isLogging, setIsLogging] = useState<boolean>(false);
 
     const handleSubmit = async (e: any) => {
@@ -28,7 +23,7 @@ export default function LoginPage() {
         setIsLogging(true);
         
         try {
-            await login({ username, password, setErrors });
+            await login({ data: { username, password }, setErrors });
             setIsLogging(false);
         } catch (error) {
             console.error(`Login failed!`, error);
