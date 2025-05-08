@@ -1,5 +1,7 @@
 # eMutua Digital E-commerce
 
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/imx0r/ecommerce-emutua-interview/blob/master/README.en.md)
+
 ## Introdução
 
 Esta é uma aplicação web para gerenciamento de produtos para a eMutua Digital. A aplicação utiliza Laravel no backend, com implementação do Laravel Sanctum para autenticação, OpenSearch para indexação de produtos para buscas avançadas e Redis para caching de dados otimizando o uso do banco de dados e tempo de resposta. No frontend foi utilizado Next.js com TailwindCSS, DaisyUI (plugin para o TailwindCSS) e SWR. Toda a aplicação está em containers com Docker.
